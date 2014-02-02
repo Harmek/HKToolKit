@@ -25,12 +25,16 @@ Pod::Spec.new do |s|
   s.subspec 'UIActionSheet' do |actionSheet|
     actionSheet.source_files = 'Classes/ios/UIActionSheet+HKToolKit.{h,m}'
   end
-
   s.subspec 'UIAlertView' do |alertView|
     alertView.source_files = 'Classes/ios/UIAlertView+HKToolKit.{h,m}'
   end
-
   s.subspec 'UIControl' do |control|
     control.source_files = 'Classes/ios/UIControl+HKToolKit.{h,m}'
+  end
+  s.subspec 'CGGeometry' do |geometry|
+    geometry.source_files = 'Classes/HKCGPoint.{h,c}', 'Classes/HKLine.{h,c}'
+  end
+  s.subspec 'CGGeometryOperators' do |geometryOp|
+    geometryOp.source_files = 'Classes/HKCGPointOperators.{h,cpp}'
   end
 end
