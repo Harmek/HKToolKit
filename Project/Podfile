@@ -1,7 +1,1 @@
-pod "HKTargetActionBlock", :path => "../HKTargetActionBlock.podspec"
-
-target "Demo" do
-end
-
-target "DemoTests" do
-end
+pod "HKToolKit", :path => "../HKToolKit.podspec"

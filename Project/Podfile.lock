@@ -1,0 +1,20 @@
+PODS:
+  - HKToolKit (0.1.0):
+    - HKToolKit/UIActionSheet
+    - HKToolKit/UIAlertView
+    - HKToolKit/UIControl
+  - HKToolKit/UIActionSheet (0.1.0)
+  - HKToolKit/UIAlertView (0.1.0)
+  - HKToolKit/UIControl (0.1.0)
+
+DEPENDENCIES:
+  - HKToolKit (from `../HKToolKit.podspec`)
+
+EXTERNAL SOURCES:
+  HKToolKit:
+    :path: ../HKToolKit.podspec
+
+SPEC CHECKSUMS:
+  HKToolKit: d831b5c39d505a56fdf0ea3c99081e1292b2cf46
+
+COCOAPODS: 0.29.0
