@@ -1,1 +1,2 @@
 pod "HKToolKit", :path => "../HKToolKit.podspec"
+link_with 'Demo', 'DemoTests'

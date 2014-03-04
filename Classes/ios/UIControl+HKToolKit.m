@@ -79,7 +79,7 @@ static const void *HKControlTargetsKey = &HKControlTargetsKey;
                                  targets,
                                  OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-
+    
     return targets;
 }
 
@@ -87,7 +87,7 @@ static const void *HKControlTargetsKey = &HKControlTargetsKey;
 {
     HKControlTarget *controlTarget = [[HKControlTarget alloc] initWithBlock:block];
     [self.targets addObject:controlTarget];
-
+    
     return controlTarget;
 }
 
@@ -103,7 +103,7 @@ static const void *HKControlTargetsKey = &HKControlTargetsKey;
 }
 
 - (UIControlBlockId)addBlockWithSender:(UIControlActionSenderBlock)block
-          forControlEvents:(UIControlEvents)controlEvents
+                      forControlEvents:(UIControlEvents)controlEvents
 {
     HKControlTarget *controlTarget = [self createControlTargetWithBlock:block];
     [self addTarget:controlTarget
@@ -114,7 +114,7 @@ static const void *HKControlTargetsKey = &HKControlTargetsKey;
 }
 
 - (UIControlBlockId)addBlockWithSenderAndControlEvents:(UIControlActionSenderControlEventsBlock)block
-                          forControlEvents:(UIControlEvents)controlEvents
+                                      forControlEvents:(UIControlEvents)controlEvents
 {
     HKControlTarget *controlTarget = [self createControlTargetWithBlock:block];
     [self addTarget:controlTarget
@@ -124,7 +124,7 @@ static const void *HKControlTargetsKey = &HKControlTargetsKey;
     return controlTarget;
 }
 
-- (void)removeControlBlockWithId:(UIControlBlockId)controlBlockId 
+- (void)removeControlBlockWithId:(UIControlBlockId)controlBlockId
                 forControlEvents:(UIControlEvents)controlEvents
 {
     NSParameterAssert([controlBlockId isKindOfClass:[HKControlTarget class]]);

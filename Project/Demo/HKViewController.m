@@ -10,6 +10,7 @@
 #import <UIActionSheet+HKToolKit.h>
 #import <UIAlertView+HKToolKit.h>
 #import <UIControl+HKToolKit.h>
+#import <HKCGPoint.h>
 
 @interface HKViewController ()
 
@@ -23,6 +24,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = NSLocalizedString(@"HKToolKit", nil);
     
     self.blockId = [self.button addBlockWithSenderAndControlEvents:^(id sender, UIControlEvents controlEvents) {
         NSLog(@"Button touched up inside, now removing the action block.");

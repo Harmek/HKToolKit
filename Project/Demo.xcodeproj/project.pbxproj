@@ -549,6 +549,7 @@
 			<key>files</key>
 			<array>
 				<string>1DAA0640189DC66E006C69C3</string>
+				<string>1DAA0658189E3779006C69C3</string>
 			</array>
 			<key>isa</key>
 			<string>PBXSourcesBuildPhase</string>
@@ -564,6 +565,7 @@
 				<string>1DAA0634189DC66E006C69C3</string>
 				<string>1DAA0636189DC66E006C69C3</string>
 				<string>1DAA0635189DC66E006C69C3</string>
+				<string>64C5715566CF4AF4B2F7CDD6</string>
 			</array>
 			<key>isa</key>
 			<string>PBXFrameworksBuildPhase</string>
@@ -589,9 +591,11 @@
 			<string>1DAA0646189DC66E006C69C3</string>
 			<key>buildPhases</key>
 			<array>
+				<string>68D940AA6E8849868CCFD849</string>
 				<string>1DAA062E189DC66E006C69C3</string>
 				<string>1DAA062F189DC66E006C69C3</string>
 				<string>1DAA0630189DC66E006C69C3</string>
+				<string>D5E47F05F5174EBBBC4AA31C</string>
 			</array>
 			<key>buildRules</key>
 			<array/>
@@ -684,6 +688,7 @@
 			<key>children</key>
 			<array>
 				<string>1DAA063F189DC66E006C69C3</string>
+				<string>1DAA0657189E3779006C69C3</string>
 				<string>1DAA063A189DC66E006C69C3</string>
 			</array>
 			<key>isa</key>
@@ -919,6 +924,8 @@
 			</array>
 			<key>defaultConfigurationIsVisible</key>
 			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
 			<key>isa</key>
 			<string>XCConfigurationList</string>
 		</dict>
@@ -983,11 +990,15 @@
 			</array>
 			<key>defaultConfigurationIsVisible</key>
 			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
 			<key>isa</key>
 			<string>XCConfigurationList</string>
 		</dict>
 		<key>1DAA0647189DC66E006C69C3</key>
 		<dict>
+			<key>baseConfigurationReference</key>
+			<string>71DB4B3B8B40439E8DA28B20</string>
 			<key>buildSettings</key>
 			<dict>
 				<key>ARCHS</key>
@@ -1025,6 +1036,8 @@
 		</dict>
 		<key>1DAA0648189DC66E006C69C3</key>
 		<dict>
+			<key>baseConfigurationReference</key>
+			<string>71DB4B3B8B40439E8DA28B20</string>
 			<key>buildSettings</key>
 			<dict>
 				<key>ARCHS</key>
@@ -1055,12 +1068,69 @@
 			<key>name</key>
 			<string>Release</string>
 		</dict>
+		<key>1DAA0657189E3779006C69C3</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>HKCGPointTests.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>1DAA0658189E3779006C69C3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1DAA0657189E3779006C69C3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
 		<key>1FC4877B483C4E7EBD799D28</key>
 		<dict>
 			<key>fileRef</key>
 			<string>C31492CD858C479D84A28B16</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
+		</dict>
+		<key>64C5715566CF4AF4B2F7CDD6</key>
+		<dict>
+			<key>fileRef</key>
+			<string>C31492CD858C479D84A28B16</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>68D940AA6E8849868CCFD849</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Check Pods Manifest.lock</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
+if [[ $? != 0 ]] ; then
+    cat &lt;&lt; EOM
+error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
+EOM
+    exit 1
+fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
 		</dict>
 		<key>71DB4B3B8B40439E8DA28B20</key>
 		<dict>
@@ -1116,6 +1186,30 @@ error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or up
 EOM
     exit 1
 fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>D5E47F05F5174EBBBC4AA31C</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Pods Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Pods-resources.sh"
 </string>
 			<key>showEnvVarsInLog</key>
 			<string>0</string>
