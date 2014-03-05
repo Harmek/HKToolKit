@@ -2,13 +2,11 @@ PODS:
   - HKToolKit (0.1.0):
     - HKToolKit/CGGeometry
     - HKToolKit/CGGeometryOperators
-    - HKToolKit/Introspection
     - HKToolKit/UIActionSheet
     - HKToolKit/UIAlertView
     - HKToolKit/UIControl
   - HKToolKit/CGGeometry (0.1.0)
   - HKToolKit/CGGeometryOperators (0.1.0)
-  - HKToolKit/Introspection (0.1.0)
   - HKToolKit/UIActionSheet (0.1.0)
   - HKToolKit/UIAlertView (0.1.0)
   - HKToolKit/UIControl (0.1.0)
@@ -21,6 +19,6 @@ EXTERNAL SOURCES:
     :path: ../HKToolKit.podspec
 
 SPEC CHECKSUMS:
-  HKToolKit: a1342fa43c1503eb948abdacc3402735c99b0b18
+  HKToolKit: 1fe96dfe89ddea65e463ffa1f139d76673eb9e08
 
 COCOAPODS: 0.29.0

@@ -37,4 +37,7 @@ Pod::Spec.new do |s|
   s.subspec 'CGGeometryOperators' do |geometryOp|
     geometryOp.source_files = 'Classes/HKCGPointOperators.{h,cpp}'
   end
+  s.subspec 'HKPropertyListViewController' do |propertyList|
+    propertyList.source_files = 'Classes/ios/HKLabelCell.{h,m}', 'Classes/ios/HKNumericCell.{h,m}', 'Classes/ios/HKTextFieldCell.{h,m}', 'Classes/ios/HKPropertyListViewController.{h,m}', 'Classes/ios/HKPropertyListViewController_Protected.h'
+  end
 end
