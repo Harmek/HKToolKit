@@ -40,4 +40,8 @@ Pod::Spec.new do |s|
   s.subspec 'HKPropertyListViewController' do |propertyList|
     propertyList.source_files = 'Classes/ios/HKLabelCell.{h,m}', 'Classes/ios/HKNumericCell.{h,m}', 'Classes/ios/HKTextFieldCell.{h,m}', 'Classes/ios/HKPropertyListViewController.{h,m}', 'Classes/ios/HKPropertyListViewController_Protected.h'
   end
+  s.subspec 'HKModules' do |modules|
+    modules.source_files = 'Classes/ios/HKRoutePattern.{h,m}', 'Classes/ios/HKModuleManager.{h,m}', 'Classes/ios/HKModule.{h,m}'
+  end
+  
 end
