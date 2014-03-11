@@ -140,6 +140,11 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
 
 - (NSArray *)resolveParametersFromPath:(NSString *)path
 {
+    if (!self.parametersIndexes)
+    {
+        return nil;
+    }
+
     NSURL *url = [NSURL URLWithString:path];
     path = url.path;
     NSArray *pathComponents = [path pathComponents];
