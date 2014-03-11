@@ -106,7 +106,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
          [patternPathComponents replaceObjectAtIndex:idx withObject:@"(.+)"];
      }];
     NSURLComponents *regexUrlComponents = [self.urlComponents copy];
-    regexUrlComponents.path  = [NSString pathWithComponents:patternPathComponents];
+    regexUrlComponents.path  = patternPathComponents ? [NSString pathWithComponents:patternPathComponents] : nil;
     NSRegularExpression *regex = [NSRegularExpression
                                   regularExpressionWithPattern:[[regexUrlComponents URL] absoluteString]
                                   options:NSRegularExpressionCaseInsensitive
