@@ -24,7 +24,7 @@
     {
         return [self copy];
     }
-    
+
     return [self substringFromIndex:1];
 }
 
@@ -58,7 +58,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
             return [obj hasPrefix:@":"];
         };
     });
-    
+
     return s_block;
 }
 
@@ -69,7 +69,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     {
         self.pattern = pattern;
     }
-    
+
     return self;
 }
 
@@ -89,7 +89,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     {
         return;
     }
-    
+
     _urlComponents = urlComponents;
     NSArray *pathComponents = [_urlComponents.path pathComponents];
     NSIndexSet *indexes = [pathComponents
@@ -98,7 +98,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     self.parametersIndexes = indexes;
     self.parameters = [[pathComponents objectsAtIndexes:indexes]
                        valueForKey:NSStringFromSelector(@selector(copyWithoutColon))];
-    
+
     NSMutableArray *patternPathComponents = [[self.urlComponents.path pathComponents] mutableCopy];
     [self.parametersIndexes
      enumerateIndexesWithOptions:0
@@ -107,8 +107,9 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
      }];
     NSURLComponents *regexUrlComponents = [self.urlComponents copy];
     regexUrlComponents.path  = patternPathComponents ? [NSString pathWithComponents:patternPathComponents] : nil;
+    NSString *regexPattern = [NSString stringWithFormat:@"^%@$", [[regexUrlComponents URL] absoluteString]];
     NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:[[regexUrlComponents URL] absoluteString]
+                                  regularExpressionWithPattern:regexPattern
                                   options:NSRegularExpressionCaseInsensitive
                                   error:nil];
     self.regularExpression = regex;
@@ -120,10 +121,10 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
                                               notFoundMarker:@""];
     NSMutableArray *pathComponents = [[self.urlComponents.path pathComponents] mutableCopy];
     [pathComponents replaceObjectsAtIndexes:self.parametersIndexes withObjects:resolvedParameters];
-    
+
     NSURLComponents *resolvedUrlComponents = [self.urlComponents copy];
     resolvedUrlComponents.path = [NSString pathWithComponents:pathComponents];
-    
+
     return [[resolvedUrlComponents URL] absoluteString];
 }
 
@@ -134,7 +135,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
                                     options:NSMatchingReportCompletion
                                     range:NSMakeRange(0, path.length)];
     NSRange range = result.range;
-    
+
     return range.location != NSNotFound && range.length != 0;
 }
 
@@ -148,7 +149,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     NSURL *url = [NSURL URLWithString:path];
     path = url.path;
     NSArray *pathComponents = [path pathComponents];
-    
+
     return [pathComponents objectsAtIndexes:self.parametersIndexes];
 }
 
@@ -159,7 +160,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     NSString *hashString = [NSString stringWithFormat:@"(%@)%@",
                             NSStringFromClass([self class]),
                             self.pattern];
-    
+
     return [hashString hash];
 }
 
@@ -174,12 +175,12 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     {
         return YES;
     }
-    
+
     if (![object isKindOfClass:[self class]])
     {
         return NO;
     }
-    
+
     return [self isEqualToPattern:object];
 }
 
@@ -193,7 +194,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
         NSString *pattern = [aDecoder decodeObjectForKey:NSStringFromSelector(@selector(pattern))];
         self.pattern = pattern;
     }
-    
+
     return self;
 }
 
@@ -209,7 +210,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
 {
     HKRoutePattern *copyPattern = [[[self class] alloc]
                                    initWithPattern:self.pattern];
-    
+
     return copyPattern;
 }
 
