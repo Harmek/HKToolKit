@@ -81,4 +81,6 @@ typedef NS_ENUM(NSUInteger, HKPropertyListRowType)
   setDefaultValue:(id)value
     forIdentifier:(NSString *)identifier;
 
+- (void)tableView:(UITableView *)tableView didSelectRowWithInfo:(NSDictionary *)rowInfo atIndexPath:(NSIndexPath *)indexPath;
+
 @end

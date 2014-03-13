@@ -15,6 +15,7 @@
 
 NSString * const HKPropertyListSectionsKey = @"sections";
 NSString * const HKPropertyListRowsKey = @"rows";
+NSString * const HKPropertyListImageKey = @"image";
 NSString * const HKPropertyListNameKey = @"name";
 NSString * const HKPropertyListDetailKey = @"detail";
 NSString * const HKPropertyListTypeKey = @"type";
@@ -212,12 +213,18 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 
 #pragma mark — Table view delegate
 
+- (void)tableView:(UITableView *)tableView didSelectRowWithInfo:(NSDictionary *)rowInfo atIndexPath:(NSIndexPath *)indexPath
+{
+
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
     NSDictionary *select = rowInfo[HKPropertyListSelectKey];
     if (!select)
     {
+        [self tableView:tableView didSelectRowWithInfo:rowInfo atIndexPath:indexPath];
         return;
     }
     
@@ -246,7 +253,11 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
     {
         cell.detailTextLabel.text = detail;
     }
-    
+    NSString *imageName = rowInfo[HKPropertyListImageKey];
+    if (imageName)
+    {
+        cell.imageView.image = [UIImage imageNamed:imageName];
+    }
     NSString *accessoryStr = rowInfo[HKPropertyListAccessoryKey];
     cell.accessoryType = [accessoryStr accessoryType];
     id defaultValue = rowInfo[HKPropertyListDefaultValueKey];

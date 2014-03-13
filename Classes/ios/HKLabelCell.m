@@ -12,12 +12,14 @@
 
 @property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, strong) UILabel *detailTextLabel;
+//@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
 @implementation HKLabelCell
 @synthesize textLabel = _textLabel;
 @synthesize detailTextLabel = _detailTextLabel;
+//@synthesize imageView = _imageView;
 
 + (UIFont *)textDefaultFont
 {
@@ -40,6 +42,62 @@
     
     return s_font;
 }
+
+//- (UIImageView *)imageView
+//{
+//    if (!_imageView)
+//    {
+//        self.imageView = [[UIImageView alloc] init];
+//        _imageView.contentMode = UIViewContentModeScaleAspectFit;
+//    }
+//
+//    return _imageView;
+//}
+//
+//- (void)setImageView:(UIImageView *)imageView
+//{
+//    if (_imageView == imageView)
+//    {
+//        return;
+//    }
+//
+//    if (_imageView)
+//    {
+//        [_imageView removeFromSuperview];
+//    }
+//
+//    _imageView = imageView;
+//    if (imageView)
+//    {
+//        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+//        [self.contentView addSubview:imageView];
+//        NSDictionary *bindings = NSDictionaryOfVariableBindings(imageView);
+//        NSArray *vertical = [NSLayoutConstraint
+//                             constraintsWithVisualFormat:@"V:|-5-[imageView]-5-|"
+//                             options:0
+//                             metrics:nil
+//                             views:bindings];
+//        NSArray *horizontal = [NSLayoutConstraint
+//                               constraintsWithVisualFormat:@"H:|-5-[imageView]"
+//                               options:0
+//                               metrics:nil
+//                               views:bindings];
+//        [self.contentView addConstraints:vertical];
+//        [self.contentView addConstraints:horizontal];
+//        if (self.imageViewMaxWidth > .0)
+//        {
+//            NSLayoutConstraint *maxWidth = [NSLayoutConstraint
+//                                            constraintWithItem:imageView
+//                                            attribute:NSLayoutAttributeWidth
+//                                            relatedBy:NSLayoutRelationLessThanOrEqual
+//                                            toItem:nil
+//                                            attribute:NSLayoutAttributeNotAnAttribute
+//                                            multiplier:1.
+//                                            constant:self.imageViewMaxWidth];
+//            [self.contentView addConstraint:maxWidth];
+//        }
+//    }
+//}
 
 - (UILabel *)textLabel
 {
@@ -167,10 +225,10 @@
                                    constraintWithItem:textLabel
                                    attribute:NSLayoutAttributeLeading
                                    relatedBy:NSLayoutRelationEqual
-                                   toItem:self.contentView
-                                   attribute:NSLayoutAttributeLeft
+                                   toItem:self.imageView
+                                   attribute:NSLayoutAttributeRight
                                    multiplier:1.
-                                   constant:20.];
+                                   constant:8.];
 
     return @[centerY, leading];
 }
@@ -189,7 +247,7 @@
                                    constraintWithItem:textLabel
                                    attribute:NSLayoutAttributeLeading
                                    relatedBy:NSLayoutRelationEqual
-                                   toItem:self.contentView
+                                   toItem:self.imageView
                                    attribute:NSLayoutAttributeLeft
                                    multiplier:1.
                                    constant:20.];
@@ -242,7 +300,7 @@
                                 constraintWithItem:detailLabel
                                 attribute:NSLayoutAttributeLeading
                                 relatedBy:NSLayoutRelationEqual
-                                toItem:self.contentView
+                                toItem:self.imageView
                                 attribute:NSLayoutAttributeLeft
                                 multiplier:1.
                                 constant:20.];

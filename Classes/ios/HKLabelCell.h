@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, HKLabelCellDetailStyle)
 + (UIFont *)textDefaultFont;
 + (UIFont *)detailTextDefaultFont;
 
-@property (nonatomic, ) HKLabelCellDetailStyle detailStyle;
+@property (nonatomic, assign) HKLabelCellDetailStyle detailStyle;
+@property (nonatomic, assign) CGFloat imageViewMaxWidth;
 
 @end
