@@ -125,7 +125,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     NSURLComponents *resolvedUrlComponents = [self.urlComponents copy];
     resolvedUrlComponents.path = [NSString pathWithComponents:pathComponents];
 
-    return [[resolvedUrlComponents URL] absoluteString];
+    return [[[resolvedUrlComponents URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (BOOL)matchesPath:(NSString *)path
@@ -146,11 +146,18 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
         return nil;
     }
 
-    NSURL *url = [NSURL URLWithString:path];
+    NSURL *url = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     path = url.path;
     NSArray *pathComponents = [path pathComponents];
+    NSArray *unescapedParameters = [pathComponents objectsAtIndexes:self.parametersIndexes];
+    NSMutableArray *parameters = [NSMutableArray arrayWithCapacity:unescapedParameters.count];
+    [unescapedParameters
+     enumerateObjectsWithOptions:0
+     usingBlock:^(NSString *parameter, NSUInteger idx, BOOL *stop) {
+         [parameters addObject:[parameter stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+     }];
 
-    return [pathComponents objectsAtIndexes:self.parametersIndexes];
+    return parameters;
 }
 
 #pragma mark – Equality
