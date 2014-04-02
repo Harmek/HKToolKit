@@ -103,15 +103,20 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     [self.parametersIndexes
      enumerateIndexesWithOptions:0
      usingBlock:^(NSUInteger idx, BOOL *stop) {
-         [patternPathComponents replaceObjectAtIndex:idx withObject:@"(.+)"];
+         [patternPathComponents replaceObjectAtIndex:idx withObject:@"([^\\/]+)"];
      }];
     NSURLComponents *regexUrlComponents = [self.urlComponents copy];
     regexUrlComponents.path  = patternPathComponents ? [NSString pathWithComponents:patternPathComponents] : nil;
-    NSString *regexPattern = [NSString stringWithFormat:@"^%@$", [[regexUrlComponents URL] absoluteString]];
+    NSString *regexPattern = [NSString stringWithFormat:@"^%@$", [[[regexUrlComponents URL] absoluteString] stringByRemovingPercentEncoding]];
+    NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression
                                   regularExpressionWithPattern:regexPattern
-                                  options:NSRegularExpressionCaseInsensitive
-                                  error:nil];
+                                  options:NSRegularExpressionCaseInsensitive | NSRegularExpressionAnchorsMatchLines
+                                  error:&error];
+    if (error)
+    {
+        NSLog(@"%@", error);
+    }
     self.regularExpression = regex;
 }
 
