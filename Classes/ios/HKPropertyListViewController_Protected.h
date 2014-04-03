@@ -98,4 +98,6 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
 
 - (void)tableView:(UITableView *)tableView didSelectRowWithInfo:(NSDictionary *)rowInfo atIndexPath:(NSIndexPath *)indexPath;
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowWithInfo:(NSDictionary *)rowInfo rowType:(HKPropertyListRowType)rowType andRowIdentifier:(NSString *)rowIdentifier atIndexPath:(NSIndexPath *)indexPath;
+
 @end

@@ -28,7 +28,7 @@
     dispatch_once(&onceToken, ^{
         s_font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
     });
-    
+
     return s_font;
 }
 
@@ -39,7 +39,7 @@
     dispatch_once(&onceToken, ^{
         s_font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
     });
-    
+
     return s_font;
 }
 
@@ -107,7 +107,7 @@
         self.textLabel.font = [HKLabelCell textDefaultFont];
         self.textLabel.textAlignment = NSTextAlignmentLeft;
     }
-    
+
     return _textLabel;
 }
 
@@ -117,39 +117,39 @@
     {
         return;
     }
-    
+
     if (_textLabel)
     {
         [_textLabel removeFromSuperview];
     }
-    
+
     _textLabel = textLabel;
     if (textLabel)
     {
         textLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:textLabel];
-        
+
         NSArray *constraints = nil;
         switch (self.detailStyle)
         {
             case HKLabelCellDetailStyleRight:
             {
                 constraints = [self constraintsForRightTextLabel:textLabel];
-                
+
                 break;
             }
             case HKLabelCellDetailStyleSubtitle:
             {
                 constraints = [self constraintsForSubtitleTextLabel:textLabel];
-                
+
                 break;
             }
             default:
                 break;
         }
         [self.contentView addConstraints:constraints];
-        [textLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
-                                     forAxis:UILayoutConstraintAxisHorizontal];
+//        [textLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
+//                                     forAxis:UILayoutConstraintAxisHorizontal];
     }
 }
 
@@ -162,12 +162,12 @@
             NSTextAlignmentRight,
             NSTextAlignmentCenter
         };
-        
+
         self.detailTextLabel = [[UILabel alloc] init];
         _detailTextLabel.font = [HKLabelCell detailTextDefaultFont];
         _detailTextLabel.textAlignment = s_textAlignments[self.detailStyle];
     }
-    
+
     return _detailTextLabel;
 }
 
@@ -177,12 +177,12 @@
     {
         return;
     }
-    
+
     if (_detailTextLabel)
     {
         [_detailTextLabel removeFromSuperview];
     }
-    
+
     _detailTextLabel = detailTextLabel;
     if (detailTextLabel)
     {
@@ -194,21 +194,22 @@
             case HKLabelCellDetailStyleRight:
             {
                 constraints = [self constraintsForRightDetailLabel:detailTextLabel];
-                
+
                 break;
             }
             case HKLabelCellDetailStyleSubtitle:
             {
                 constraints = [self constraintsForSubtitleDetailLabel:detailTextLabel];
-                
+
                 break;
             }
             default:
                 break;
         }
+
         [self.contentView addConstraints:constraints];
-        [detailTextLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
-                                           forAxis:UILayoutConstraintAxisHorizontal];
+//        [detailTextLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
+//                                           forAxis:UILayoutConstraintAxisHorizontal];
     }
 }
 
@@ -230,6 +231,7 @@
                                    attribute:NSLayoutAttributeRight
                                    multiplier:1.
                                    constant:8.];
+//    leading.priority = UILayoutPriorityRequired;
 
     return @[centerY, leading];
 }
@@ -252,7 +254,7 @@
                                    attribute:NSLayoutAttributeLeft
                                    multiplier:1.
                                    constant:20.];
-    
+
     return @[centerY, leading];
 }
 
@@ -267,14 +269,14 @@
                                    attribute:NSLayoutAttributeBaseline
                                    multiplier:1.
                                    constant:0.];
-//    NSLayoutConstraint *left = [NSLayoutConstraint
-//                                constraintWithItem:detailLabel
-//                                attribute:NSLayoutAttributeLeading
-//                                relatedBy:NSLayoutRelationEqual
-//                                toItem:textLabel
-//                                attribute:NSLayoutAttributeLeading
-//                                multiplier:1.
-//                                constant:8.];
+    NSLayoutConstraint *left = [NSLayoutConstraint
+                                constraintWithItem:detailLabel
+                                attribute:NSLayoutAttributeLeading
+                                relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                toItem:textLabel
+                                attribute:NSLayoutAttributeRight
+                                multiplier:1.
+                                constant:8.];
     NSLayoutConstraint *right = [NSLayoutConstraint
                                  constraintWithItem:detailLabel
                                  attribute:NSLayoutAttributeTrailing
@@ -283,7 +285,7 @@
                                  attribute:NSLayoutAttributeRight
                                  multiplier:1.
                                  constant:-8.];
-    
+
     return @[centerY, right];
 }
 
@@ -305,7 +307,7 @@
                                 attribute:NSLayoutAttributeLeft
                                 multiplier:1.
                                 constant:20.];
-    
+
     return @[centerY, left];
 }
 

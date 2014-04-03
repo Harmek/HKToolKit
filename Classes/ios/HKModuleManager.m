@@ -8,6 +8,7 @@
 
 #import "HKModuleManager.h"
 #import "HKModule.h"
+#import "HKRoutePattern.h"
 
 NSString * const HKModuleTransitionTypeName = @"HKModuleTransitionType";
 NSString * const HKModuleTransitionAnimatedName = @"HKModuleTransitionAnimated";

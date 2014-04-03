@@ -7,7 +7,6 @@
 //
 
 @import UIKit;
-#import "HKRoutePattern.h"
 
 extern NSString * const HKModuleTransitionTypeName;
 extern NSString * const HKModuleTransitionAnimatedName;
