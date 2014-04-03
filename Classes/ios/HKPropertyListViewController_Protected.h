@@ -28,8 +28,10 @@ extern NSString * const HKPropertyListRowTypeLabelId;
 extern NSString * const HKPropertyListRowTypeTextFieldId;
 extern NSString * const HKPropertyListRowTypeNumericId;
 
+extern NSString * const HKLabelSectionHeaderIdentifier;
 extern NSString * const HKLabelCellIdentifier;
 extern NSString * const HKTextFieldCellIdentifier;
+extern NSString * const HKNumericCellIdentifier;
 
 extern NSString * const HKPropertyListAccessoryNoneId;
 extern NSString * const HKPropertyListAccessoryDisclosureIndicatorId;
@@ -64,12 +66,25 @@ typedef NS_ENUM(NSUInteger, HKPropertyListRowType)
 - (NSDictionary *)sectionForIndex:(NSInteger)section;
 - (NSDictionary *)rowForIndexPath:(NSIndexPath *)indexPath;
 
+- (NSInteger)modifiedSectionIndex:(NSInteger)sectionIndex;
+- (id)targetObjectForSectionIndex:(NSInteger)sectionIndex;
+
+- (void)tableView:(UITableView *)tableView configureHeaderView:(UITableViewHeaderFooterView *)header withSectionInfo:(NSDictionary *)sectionInfo andRowIdentifier:(NSString *)identifier atSectionIndex:(NSInteger)sectionIndex;
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderWithSectionInfo:(NSDictionary *)sectionInfo atSectionIndex:(NSInteger)section;
+
 - (void)tableView:(UITableView *)tableView
     configureCell:(UITableViewCell *)cell
       withRowInfo:(NSDictionary *)rowInfo
           rowType:(HKPropertyListRowType)type
     andRowIdentifier:(NSString *)identifier
       atIndexPath:(NSIndexPath *)indexPath;
+
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowWithInfo:(NSDictionary *)rowInfo
+             rowType:(HKPropertyListRowType)rowType
+    andRowIdentifier:(NSString *)rowIdentifier
+         atIndexPath:(NSIndexPath *)indexPath;
 
 - (void)tableView:(UITableView *)tableView
    didChangeValue:(id)value

@@ -12,14 +12,14 @@
 
 @property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, strong) UILabel *detailTextLabel;
-//@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
 @implementation HKLabelCell
 @synthesize textLabel = _textLabel;
 @synthesize detailTextLabel = _detailTextLabel;
-//@synthesize imageView = _imageView;
+@synthesize imageView = _imageView;
 
 + (UIFont *)textDefaultFont
 {
@@ -43,61 +43,61 @@
     return s_font;
 }
 
-//- (UIImageView *)imageView
-//{
-//    if (!_imageView)
-//    {
-//        self.imageView = [[UIImageView alloc] init];
-//        _imageView.contentMode = UIViewContentModeScaleAspectFit;
-//    }
-//
-//    return _imageView;
-//}
-//
-//- (void)setImageView:(UIImageView *)imageView
-//{
-//    if (_imageView == imageView)
-//    {
-//        return;
-//    }
-//
-//    if (_imageView)
-//    {
-//        [_imageView removeFromSuperview];
-//    }
-//
-//    _imageView = imageView;
-//    if (imageView)
-//    {
-//        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-//        [self.contentView addSubview:imageView];
-//        NSDictionary *bindings = NSDictionaryOfVariableBindings(imageView);
-//        NSArray *vertical = [NSLayoutConstraint
-//                             constraintsWithVisualFormat:@"V:|-5-[imageView]-5-|"
-//                             options:0
-//                             metrics:nil
-//                             views:bindings];
-//        NSArray *horizontal = [NSLayoutConstraint
-//                               constraintsWithVisualFormat:@"H:|-5-[imageView]"
-//                               options:0
-//                               metrics:nil
-//                               views:bindings];
-//        [self.contentView addConstraints:vertical];
-//        [self.contentView addConstraints:horizontal];
-//        if (self.imageViewMaxWidth > .0)
-//        {
-//            NSLayoutConstraint *maxWidth = [NSLayoutConstraint
-//                                            constraintWithItem:imageView
-//                                            attribute:NSLayoutAttributeWidth
-//                                            relatedBy:NSLayoutRelationLessThanOrEqual
-//                                            toItem:nil
-//                                            attribute:NSLayoutAttributeNotAnAttribute
-//                                            multiplier:1.
-//                                            constant:self.imageViewMaxWidth];
-//            [self.contentView addConstraint:maxWidth];
-//        }
-//    }
-//}
+- (UIImageView *)imageView
+{
+    if (!_imageView)
+    {
+        self.imageView = [[UIImageView alloc] init];
+        _imageView.contentMode = UIViewContentModeScaleAspectFit;
+    }
+
+    return _imageView;
+}
+
+- (void)setImageView:(UIImageView *)imageView
+{
+    if (_imageView == imageView)
+    {
+        return;
+    }
+
+    if (_imageView)
+    {
+        [_imageView removeFromSuperview];
+    }
+
+    _imageView = imageView;
+    if (imageView)
+    {
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:imageView];
+        NSDictionary *bindings = NSDictionaryOfVariableBindings(imageView);
+        NSArray *vertical = [NSLayoutConstraint
+                             constraintsWithVisualFormat:@"V:|-5-[imageView]-5-|"
+                             options:0
+                             metrics:nil
+                             views:bindings];
+        NSArray *horizontal = [NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|-5-[imageView]"
+                               options:0
+                               metrics:nil
+                               views:bindings];
+        [self.contentView addConstraints:vertical];
+        [self.contentView addConstraints:horizontal];
+        if (self.imageViewMaxWidth > .0)
+        {
+            NSLayoutConstraint *maxWidth = [NSLayoutConstraint
+                                            constraintWithItem:imageView
+                                            attribute:NSLayoutAttributeWidth
+                                            relatedBy:NSLayoutRelationLessThanOrEqual
+                                            toItem:nil
+                                            attribute:NSLayoutAttributeNotAnAttribute
+                                            multiplier:1.
+                                            constant:self.imageViewMaxWidth];
+            [self.contentView addConstraint:maxWidth];
+        }
+    }
+}
 
 - (UILabel *)textLabel
 {
@@ -105,6 +105,7 @@
     {
         self.textLabel = [[UILabel alloc] init];
         self.textLabel.font = [HKLabelCell textDefaultFont];
+        self.textLabel.textAlignment = NSTextAlignmentLeft;
     }
     
     return _textLabel;
@@ -266,14 +267,14 @@
                                    attribute:NSLayoutAttributeBaseline
                                    multiplier:1.
                                    constant:0.];
-    NSLayoutConstraint *left = [NSLayoutConstraint
-                                constraintWithItem:detailLabel
-                                attribute:NSLayoutAttributeLeading
-                                relatedBy:NSLayoutRelationEqual
-                                toItem:textLabel
-                                attribute:NSLayoutAttributeLeading
-                                multiplier:1.
-                                constant:8.];
+//    NSLayoutConstraint *left = [NSLayoutConstraint
+//                                constraintWithItem:detailLabel
+//                                attribute:NSLayoutAttributeLeading
+//                                relatedBy:NSLayoutRelationEqual
+//                                toItem:textLabel
+//                                attribute:NSLayoutAttributeLeading
+//                                multiplier:1.
+//                                constant:8.];
     NSLayoutConstraint *right = [NSLayoutConstraint
                                  constraintWithItem:detailLabel
                                  attribute:NSLayoutAttributeTrailing
@@ -281,9 +282,9 @@
                                  toItem:self.contentView
                                  attribute:NSLayoutAttributeRight
                                  multiplier:1.
-                                 constant:-0.];
+                                 constant:-8.];
     
-    return @[centerY, left, right];
+    return @[centerY, right];
 }
 
 - (NSArray *)constraintsForSubtitleDetailLabel:(UILabel *)detailLabel

@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, HKPropertyListType)
+{
+    HKPropertyListTypeFixed = 0,
+    HKPropertyListTypeTargetObject,
+};
+
 @interface HKPropertyListViewController : UITableViewController
 
 @property (nonatomic, copy) NSString *name;
+@property (nonatomic, assign) HKPropertyListType type;
+
+@property (nonatomic, strong) id targetObject;
 
 @end

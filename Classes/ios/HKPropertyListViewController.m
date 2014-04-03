@@ -35,6 +35,7 @@ NSString * const HKPropertyListRowTypeLabelId = @"label";
 NSString * const HKPropertyListRowTypeTextFieldId = @"textField";
 NSString * const HKPropertyListRowTypeNumericId = @"numeric";
 
+NSString * const HKLabelSectionHeaderIdentifier = @"LabelHeader";
 NSString * const HKLabelCellIdentifier = @"LabelCell";
 NSString * const HKTextFieldCellIdentifier = @"TextFieldCell";
 NSString * const HKNumericCellIdentifier = @"NumericCell";
@@ -109,6 +110,21 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 
 @implementation HKPropertyListViewController
 
++ (NSArray *)cellIdentifiers
+{
+    static NSArray *s_identifiers = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_identifiers = @[
+                          HKLabelCellIdentifier,
+                          HKTextFieldCellIdentifier,
+                          HKNumericCellIdentifier
+                          ];
+    });
+
+    return s_identifiers;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -122,6 +138,10 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
     [self.tableView
      registerClass:[HKNumericCell class]
      forCellReuseIdentifier:HKNumericCellIdentifier];
+
+    [self.tableView
+     registerClass:[UITableViewHeaderFooterView class]
+     forHeaderFooterViewReuseIdentifier:HKLabelSectionHeaderIdentifier];
     
     NSString *title = self.properties[HKPropertyListTitleKey];
     self.title = title;
@@ -142,61 +162,145 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 - (NSDictionary *)sectionForIndex:(NSInteger)section
 {
     NSArray *sections = self.properties[HKPropertyListSectionsKey];
+    section = [self modifiedSectionIndex:section];
     NSParameterAssert(section < sections.count);
-    
+
     return sections[section];
 }
 
 - (NSDictionary *)rowForIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *section = [self sectionForIndex:indexPath.section];
+    NSInteger modifiedSectionIndex = [self modifiedSectionIndex:indexPath.section];
+    NSDictionary *section = [self sectionForIndex:modifiedSectionIndex];
     NSArray *rows = section[HKPropertyListRowsKey];
     NSDictionary *row = rows[indexPath.row];
     
     return row;
 }
 
+- (NSInteger)modifiedSectionIndex:(NSInteger)sectionIndex
+{
+    switch (self.type)
+    {
+        case HKPropertyListTypeTargetObject:
+        {
+            if ([self.targetObject respondsToSelector:@selector(count)])
+            {
+                sectionIndex = 0;
+            }
+
+            break;
+        }
+        default:
+            break;
+    }
+
+    return sectionIndex;
+}
+
+- (id)targetObjectForSectionIndex:(NSInteger)sectionIndex
+{
+    if ([self.targetObject respondsToSelector:@selector(count)])
+    {
+        if ([self.targetObject respondsToSelector:@selector(objectAtIndexedSubscript:)])
+        {
+            return self.targetObject[sectionIndex];
+        }
+    }
+
+    return self.targetObject;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSArray *sections = self.properties[HKPropertyListSectionsKey];
-    
-    return sections.count;
+    switch (self.type)
+    {
+        case HKPropertyListTypeTargetObject:
+        {
+            if ([self.targetObject respondsToSelector:@selector(count)])
+            {
+                return [self.targetObject count];
+            }
+        }
+        case HKPropertyListTypeFixed:
+        {
+            NSArray *sections = self.properties[HKPropertyListSectionsKey];
+
+            return sections.count;
+        }
+        default:
+            break;
+    }
+
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
     NSDictionary *section = [self sectionForIndex:sectionIndex];
     NSArray *rows = section[HKPropertyListRowsKey];
-    
+
     return rows.count;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)sectionIdx
+{
+    UITableViewHeaderFooterView *header = [tableView dequeueReusableHeaderFooterViewWithIdentifier:HKLabelSectionHeaderIdentifier];
+    NSDictionary *section = [self sectionForIndex:sectionIdx];
+
+    [self tableView:tableView
+configureHeaderView:header
+    withSectionInfo:section
+   andRowIdentifier:HKLabelSectionHeaderIdentifier
+     atSectionIndex:sectionIdx];
+
+    return header;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)sectionIndex
 {
     NSDictionary *section = [self sectionForIndex:sectionIndex];
-    NSString *name = section[HKPropertyListNameKey];
-    
-    return name;
+    switch (self.type)
+    {
+        case HKPropertyListTypeTargetObject:
+        {
+            NSString *keyPath = section[HKPropertyListIdKey];
+            id targetObject = [self targetObjectForSectionIndex:sectionIndex];
+            if (keyPath)
+            {
+                id title = [targetObject valueForKeyPath:keyPath];
+
+                return title;
+            }
+        }
+        case HKPropertyListTypeFixed:
+        {
+            NSString *name = section[HKPropertyListNameKey];
+
+            return name;
+        }
+        default:
+            break;
+    }
+
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    NSDictionary *sectionInfo = [self sectionForIndex:section];
+
+    return [self tableView:tableView heightForHeaderWithSectionInfo:sectionInfo atSectionIndex:section];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSArray *s_identifiers = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        s_identifiers = @[
-                          HKLabelCellIdentifier,
-                          HKTextFieldCellIdentifier,
-                          HKNumericCellIdentifier
-                          ];
-    });
-    
     NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
     NSString *rowTypeStr = rowInfo[HKPropertyListTypeKey];
     HKPropertyListRowType rowType = [rowTypeStr rowType];
-    NSString *cellIdentifier = s_identifiers[rowType];
+    NSString *cellIdentifier = [[self class] cellIdentifiers][rowType];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                             forIndexPath:indexPath];
@@ -209,6 +313,20 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
         atIndexPath:indexPath];
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
+    NSString *rowTypeStr = rowInfo[HKPropertyListTypeKey];
+    HKPropertyListRowType rowType = [rowTypeStr rowType];
+    NSString *cellIdentifier = [[self class] cellIdentifiers][rowType];
+
+    return [self tableView:tableView
+      heightForRowWithInfo:rowInfo
+                   rowType:rowType
+          andRowIdentifier:cellIdentifier
+               atIndexPath:indexPath];
 }
 
 #pragma mark — Table view delegate
@@ -239,6 +357,18 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 
 #pragma mark — Protected
 
+- (void)tableView:(UITableView *)tableView configureHeaderView:(UITableViewHeaderFooterView *)header withSectionInfo:(NSDictionary *)sectionInfo andRowIdentifier:(NSString *)identifier atSectionIndex:(NSInteger)sectionIndex
+{
+    NSString *textLabel = [self tableView:tableView titleForHeaderInSection:sectionIndex];
+
+    header.textLabel.text = textLabel;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderWithSectionInfo:(NSDictionary *)sectionInfo atSectionIndex:(NSInteger)section
+{
+    return 38.;
+}
+
 - (void)tableView:(UITableView *)tableView
     configureCell:(UITableViewCell *)cell
       withRowInfo:(NSDictionary *)rowInfo
@@ -248,11 +378,33 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 {
     NSString *name = rowInfo[HKPropertyListNameKey];
     cell.textLabel.text = name;
-    NSString *detail = rowInfo[HKPropertyListDetailKey];
-    if (detail)
+    switch (self.type)
     {
-        cell.detailTextLabel.text = detail;
+        case HKPropertyListTypeTargetObject:
+        {
+            NSString *keyPath = rowInfo[HKPropertyListIdKey];
+            id targetObject = [self targetObjectForSectionIndex:indexPath.section];
+            if (keyPath)
+            {
+                cell.detailTextLabel.text = [targetObject valueForKeyPath:keyPath];
+
+                break;
+            }
+        }
+        case HKPropertyListTypeFixed:
+        {
+            NSString *detail = rowInfo[HKPropertyListDetailKey];
+            if (detail)
+            {
+                cell.detailTextLabel.text = detail;
+            }
+
+            break;
+        }
+        default:
+            break;
     }
+
     NSString *imageName = rowInfo[HKPropertyListImageKey];
     if (imageName)
     {
@@ -303,6 +455,16 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
           forIdentifier:propertyIdentifier];
     }
 }
+
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowWithInfo:(NSDictionary *)rowInfo
+             rowType:(HKPropertyListRowType)rowType
+    andRowIdentifier:(NSString *)rowIdentifier
+         atIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewAutomaticDimension;
+}
+
 
 - (void)tableView:(UITableView *)tableView
   setDefaultValue:(id)value
