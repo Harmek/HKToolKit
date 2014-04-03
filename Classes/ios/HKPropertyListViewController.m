@@ -109,6 +109,21 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 
 @implementation HKPropertyListViewController
 
++ (NSArray *)cellIdentifiers
+{
+    static NSArray *s_identifiers = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_identifiers = @[
+                          HKLabelCellIdentifier,
+                          HKTextFieldCellIdentifier,
+                          HKNumericCellIdentifier
+                          ];
+    });
+
+    return s_identifiers;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -183,20 +198,10 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSArray *s_identifiers = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        s_identifiers = @[
-                          HKLabelCellIdentifier,
-                          HKTextFieldCellIdentifier,
-                          HKNumericCellIdentifier
-                          ];
-    });
-    
     NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
     NSString *rowTypeStr = rowInfo[HKPropertyListTypeKey];
     HKPropertyListRowType rowType = [rowTypeStr rowType];
-    NSString *cellIdentifier = s_identifiers[rowType];
+    NSString *cellIdentifier = [[self class] cellIdentifiers][rowType];
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                             forIndexPath:indexPath];
@@ -212,6 +217,25 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 }
 
 #pragma mark — Table view delegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowWithInfo:(NSDictionary *)rowInfo rowType:(HKPropertyListRowType)rowType andRowIdentifier:(NSString *)rowIdentifier atIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewAutomaticDimension;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
+    NSString *rowTypeStr = rowInfo[HKPropertyListTypeKey];
+    HKPropertyListRowType rowType = [rowTypeStr rowType];
+    NSString *cellIdentifier = [[self class] cellIdentifiers][rowType];
+
+    return [self tableView:tableView
+      heightForRowWithInfo:rowInfo
+                   rowType:rowType
+          andRowIdentifier:cellIdentifier
+               atIndexPath:indexPath];
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowWithInfo:(NSDictionary *)rowInfo atIndexPath:(NSIndexPath *)indexPath
 {
