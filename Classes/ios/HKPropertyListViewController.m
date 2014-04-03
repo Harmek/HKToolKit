@@ -315,26 +315,7 @@ configureHeaderView:header
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
-    NSString *rowTypeStr = rowInfo[HKPropertyListTypeKey];
-    HKPropertyListRowType rowType = [rowTypeStr rowType];
-    NSString *cellIdentifier = [[self class] cellIdentifiers][rowType];
-
-    return [self tableView:tableView
-      heightForRowWithInfo:rowInfo
-                   rowType:rowType
-          andRowIdentifier:cellIdentifier
-               atIndexPath:indexPath];
-}
-
 #pragma mark — Table view delegate
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowWithInfo:(NSDictionary *)rowInfo rowType:(HKPropertyListRowType)rowType andRowIdentifier:(NSString *)rowIdentifier atIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewAutomaticDimension;
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

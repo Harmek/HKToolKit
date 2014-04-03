@@ -286,7 +286,7 @@
                                  multiplier:1.
                                  constant:-8.];
 
-    return @[centerY, right];
+    return @[centerY, left, right];
 }
 
 - (NSArray *)constraintsForSubtitleDetailLabel:(UILabel *)detailLabel
