@@ -9,6 +9,7 @@
 #import "HKPropertyListViewController.h"
 #import "HKPropertyListViewController_Protected.h"
 
+#import "HKTableViewHeaderFooterCellView.h"
 #import "HKLabelCell.h"
 #import "HKTextFieldCell.h"
 #import "HKNumericCell.h"
@@ -140,7 +141,7 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
      forCellReuseIdentifier:HKNumericCellIdentifier];
 
     [self.tableView
-     registerClass:[UITableViewHeaderFooterView class]
+     registerClass:[HKTableViewHeaderFooterCellView class]
      forHeaderFooterViewReuseIdentifier:HKLabelSectionHeaderIdentifier];
     
     NSString *title = self.properties[HKPropertyListTitleKey];
@@ -247,7 +248,7 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)sectionIdx
 {
-    UITableViewHeaderFooterView *header = [tableView dequeueReusableHeaderFooterViewWithIdentifier:HKLabelSectionHeaderIdentifier];
+    HKTableViewHeaderFooterCellView *header = [tableView dequeueReusableHeaderFooterViewWithIdentifier:HKLabelSectionHeaderIdentifier];
     NSDictionary *section = [self sectionForIndex:sectionIdx];
 
     [self tableView:tableView
@@ -257,35 +258,6 @@ configureHeaderView:header
      atSectionIndex:sectionIdx];
 
     return header;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)sectionIndex
-{
-    NSDictionary *section = [self sectionForIndex:sectionIndex];
-    switch (self.type)
-    {
-        case HKPropertyListTypeTargetObject:
-        {
-            NSString *keyPath = section[HKPropertyListIdKey];
-            id targetObject = [self targetObjectForSectionIndex:sectionIndex];
-            if (keyPath)
-            {
-                id title = [targetObject valueForKeyPath:keyPath];
-
-                return title;
-            }
-        }
-        case HKPropertyListTypeFixed:
-        {
-            NSString *name = section[HKPropertyListNameKey];
-
-            return name;
-        }
-        default:
-            break;
-    }
-
-    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -359,9 +331,32 @@ configureHeaderView:header
 
 - (void)tableView:(UITableView *)tableView configureHeaderView:(UITableViewHeaderFooterView *)header withSectionInfo:(NSDictionary *)sectionInfo andRowIdentifier:(NSString *)identifier atSectionIndex:(NSInteger)sectionIndex
 {
-    NSString *textLabel = [self tableView:tableView titleForHeaderInSection:sectionIndex];
+    NSString *title = nil;
+    switch (self.type)
+    {
+        case HKPropertyListTypeTargetObject:
+        {
+            NSString *keyPath = sectionInfo[HKPropertyListIdKey];
+            id targetObject = [self targetObjectForSectionIndex:sectionIndex];
+            if (keyPath)
+            {
+                title = [targetObject valueForKeyPath:keyPath];
 
-    header.textLabel.text = textLabel;
+                break;
+            }
+        }
+        case HKPropertyListTypeFixed:
+        {
+            NSString *name = sectionInfo[HKPropertyListNameKey];
+            title = name;
+
+            break;
+        }
+        default:
+            break;
+    }
+
+    header.textLabel.text = title;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderWithSectionInfo:(NSDictionary *)sectionInfo atSectionIndex:(NSInteger)section
