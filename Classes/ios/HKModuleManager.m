@@ -17,6 +17,7 @@ NSString * const HKModuleTransitionModalTransitionStyleName = @"HKModuleTransiti
 NSString * const HKModuleTransitionPresentationCompleteBlockName = @"HKModuleTransitionPresentationCompleteBlock";
 NSString * const HKModuleTransitionPopoverArrowDirectionName = @"HKModuleTransitionPopoverArrowDirection";
 NSString * const HKModuleTransitionPopoverContentSizeName = @"HKModuleTransitionPopoverContentSize";
+NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleTransitionEmbedInNavigationController";
 
 @interface HKModuleManager ()
 
@@ -91,6 +92,8 @@ NSString * const HKModuleTransitionPopoverContentSizeName = @"HKModuleTransition
     }
     HKModuleTransitionType transitionTypeValue = transitionType.unsignedIntegerValue;
     NSNumber *animated = options[HKModuleTransitionAnimatedName] ?: @YES;
+    NSNumber *embedInNavCtrl = options[HKModuleTransitionEmbedInNavigationControllerName] ?: @NO;
+
     switch (transitionTypeValue)
     {
         case HKModuleTransitionTypePush:
@@ -111,6 +114,10 @@ NSString * const HKModuleTransitionPopoverContentSizeName = @"HKModuleTransition
         {
             NSNumber *presentationStyle = options[HKModuleTransitionModalPresentationStyleName] ?: @(UIModalPresentationCurrentContext);
             NSNumber *transitionStyle = options[HKModuleTransitionModalTransitionStyleName] ?: @(UIModalTransitionStyleCoverVertical);
+            if (embedInNavCtrl.boolValue)
+            {
+                toViewController = [[UINavigationController alloc] initWithRootViewController:toViewController];
+            }
             toViewController.modalPresentationStyle = presentationStyle.integerValue;
             toViewController.modalTransitionStyle = transitionStyle.integerValue;
             HKModuleTransitionPresentationCompleteBlock block = options[HKModuleTransitionPresentationCompleteBlockName];
@@ -128,6 +135,11 @@ NSString * const HKModuleTransitionPopoverContentSizeName = @"HKModuleTransition
         }
         case HKModuleTransitionTypePopover:
         {
+            if (embedInNavCtrl.boolValue)
+            {
+                toViewController = [[UINavigationController alloc] initWithRootViewController:toViewController];
+            }
+
             UIPopoverController *ppc = [[UIPopoverController alloc] initWithContentViewController:toViewController];
             NSNumber *arrowDirection = options[HKModuleTransitionPopoverArrowDirectionName] ?: @(UIPopoverArrowDirectionAny);
             NSValue *contentSize = options[HKModuleTransitionPopoverContentSizeName];
