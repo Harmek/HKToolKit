@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
     geometryOp.source_files = 'Classes/HKCGPointOperators.{h,cpp}'
   end
   s.subspec 'HKPropertyListViewController' do |propertyList|
-    propertyList.source_files = 'Classes/ios/HKLabelCell.{h,m}', 'Classes/ios/HKNumericCell.{h,m}', 'Classes/ios/HKTextFieldCell.{h,m}', 'Classes/ios/HKPropertyListViewController.{h,m}', 'Classes/ios/HKPropertyListViewController_Protected.h', 'Classes/ios/HKTableViewHeaderFooterCellView.{h,m}'
+    propertyList.source_files = 'Classes/ios/HKLabelCell.{h,m}', 'Classes/ios/HKNumericCell.{h,m}', 'Classes/ios/HKTextFieldCell.{h,m}', 'Classes/ios/HKSwitchCell.{h,m}', 'Classes/ios/HKPropertyListViewController.{h,m}', 'Classes/ios/HKPropertyListViewController_Protected.h', 'Classes/ios/HKTableViewHeaderFooterCellView.{h,m}'
   end
   s.subspec 'HKModules' do |modules|
     modules.source_files = 'Classes/ios/HKRoutePattern.{h,m}', 'Classes/ios/HKModuleManager.{h,m}', 'Classes/ios/HKModule.{h,m}'
