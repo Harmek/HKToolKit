@@ -27,11 +27,13 @@ extern NSString * const HKPropertyListSegueKey;
 extern NSString * const HKPropertyListRowTypeLabelId;
 extern NSString * const HKPropertyListRowTypeTextFieldId;
 extern NSString * const HKPropertyListRowTypeNumericId;
+extern NSString * const HKPropertyListRowTypeBooleanId;
 
 extern NSString * const HKLabelSectionHeaderIdentifier;
 extern NSString * const HKLabelCellIdentifier;
 extern NSString * const HKTextFieldCellIdentifier;
 extern NSString * const HKNumericCellIdentifier;
+extern NSString * const HKBooleanCellIdentifier;
 
 extern NSString * const HKPropertyListAccessoryNoneId;
 extern NSString * const HKPropertyListAccessoryDisclosureIndicatorId;
@@ -43,7 +45,8 @@ typedef NS_ENUM(NSUInteger, HKPropertyListRowType)
 {
     HKPropertyListRowTypeLabel = 0,
     HKPropertyListRowTypeTextField,
-    HKPropertyListRowTypeNumeric
+    HKPropertyListRowTypeNumeric,
+    HKPropertyListRowTypeBoolean
 };
 
 @interface NSString (HKPropertyList)
@@ -91,6 +94,9 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
     forIdentifier:(NSString *)identifier
           forCell:(UITableViewCell *)cell
       atIndexPath:(NSIndexPath *)indexPath;
+
+
+- (id)tableView:(UITableView *)tableView defaultValueForIdentifier:(NSString *)identifier;
 
 - (void)tableView:(UITableView *)tableView
   setDefaultValue:(id)value

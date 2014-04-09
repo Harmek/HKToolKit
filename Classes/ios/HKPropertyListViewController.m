@@ -13,6 +13,7 @@
 #import "HKLabelCell.h"
 #import "HKTextFieldCell.h"
 #import "HKNumericCell.h"
+#import "HKSwitchCell.h"
 
 NSString * const HKPropertyListSectionsKey = @"sections";
 NSString * const HKPropertyListRowsKey = @"rows";
@@ -35,11 +36,13 @@ NSString * const HKPropertyListSegueKey = @"segue";
 NSString * const HKPropertyListRowTypeLabelId = @"label";
 NSString * const HKPropertyListRowTypeTextFieldId = @"textField";
 NSString * const HKPropertyListRowTypeNumericId = @"numeric";
+NSString * const HKPropertyListRowTypeBooleanId = @"boolean";
 
-NSString * const HKLabelSectionHeaderIdentifier = @"LabelHeader";
-NSString * const HKLabelCellIdentifier = @"LabelCell";
-NSString * const HKTextFieldCellIdentifier = @"TextFieldCell";
-NSString * const HKNumericCellIdentifier = @"NumericCell";
+NSString * const HKLabelSectionHeaderIdentifier = @"HKPropertyListLabelHeader";
+NSString * const HKLabelCellIdentifier = @"HKPropertyListLabelCell";
+NSString * const HKTextFieldCellIdentifier = @"HKPropertyListTextFieldCell";
+NSString * const HKNumericCellIdentifier = @"HKPropertyListNumericCell";
+NSString * const HKBooleanCellIdentifier = @"HKPropertyListBoolean";
 
 NSString * const HKPropertyListAccessoryNoneId = @"none";
 NSString * const HKPropertyListAccessoryDisclosureIndicatorId = @"disclosureIndicator";
@@ -57,7 +60,8 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
         s_rowTypes = @{
                        HKPropertyListRowTypeLabelId : @(HKPropertyListRowTypeLabel),
                        HKPropertyListRowTypeTextFieldId : @(HKPropertyListRowTypeTextField),
-                       HKPropertyListRowTypeNumericId : @(HKPropertyListRowTypeNumeric)
+                       HKPropertyListRowTypeNumericId : @(HKPropertyListRowTypeNumeric),
+                       HKPropertyListRowTypeBooleanId : @(HKPropertyListRowTypeBoolean)
                        };
     });
     
@@ -119,7 +123,8 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
         s_identifiers = @[
                           HKLabelCellIdentifier,
                           HKTextFieldCellIdentifier,
-                          HKNumericCellIdentifier
+                          HKNumericCellIdentifier,
+                          HKBooleanCellIdentifier
                           ];
     });
 
@@ -139,6 +144,9 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
     [self.tableView
      registerClass:[HKNumericCell class]
      forCellReuseIdentifier:HKNumericCellIdentifier];
+    [self.tableView
+     registerClass:[HKSwitchCell class]
+     forCellReuseIdentifier:HKBooleanCellIdentifier];
 
     [self.tableView
      registerClass:[HKTableViewHeaderFooterCellView class]
@@ -368,7 +376,7 @@ configureHeaderView:header
     configureCell:(UITableViewCell *)cell
       withRowInfo:(NSDictionary *)rowInfo
           rowType:(HKPropertyListRowType)type
- andRowIdentifier:(NSString *)identifier
+ andRowIdentifier:(NSString *)rowIdentifier
       atIndexPath:(NSIndexPath *)indexPath
 {
     NSString *name = rowInfo[HKPropertyListNameKey];
@@ -407,7 +415,8 @@ configureHeaderView:header
     }
     NSString *accessoryStr = rowInfo[HKPropertyListAccessoryKey];
     cell.accessoryType = [accessoryStr accessoryType];
-    id defaultValue = rowInfo[HKPropertyListDefaultValueKey];
+    NSString *propertyIdentifier = rowInfo[HKPropertyListIdKey];
+    id defaultValue = [self tableView:tableView defaultValueForIdentifier:propertyIdentifier] ?: rowInfo[HKPropertyListDefaultValueKey];
     switch (type)
     {
         case HKPropertyListRowTypeTextField:
@@ -437,12 +446,20 @@ configureHeaderView:header
             
             break;
         }
+        case HKPropertyListRowTypeBoolean:
+        {
+            HKSwitchCell *switchCell = (id)cell;
+            NSNumber *defaultNumber = defaultValue;
+            switchCell.switchControl.on = defaultNumber.boolValue;
+            [switchCell.switchControl addTarget:self
+                                         action:@selector(switchCellSwitchValueChanged:)
+                               forControlEvents:UIControlEventValueChanged];
+        }
             
         default:
             break;
     }
     
-    NSString *propertyIdentifier = rowInfo[HKPropertyListIdKey];
     if (defaultValue && propertyIdentifier)
     {
         [self tableView:tableView
@@ -460,6 +477,10 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
     return UITableViewAutomaticDimension;
 }
 
+- (id)tableView:(UITableView *)tableView defaultValueForIdentifier:(NSString *)identifier
+{
+    return nil;
+}
 
 - (void)tableView:(UITableView *)tableView
   setDefaultValue:(id)value
@@ -483,9 +504,9 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
     UITableViewCell *cell = nil;
     UITableView *tableView = nil;
     NSIndexPath *indexPath = nil;
-    if ((cell = [view superViewOfType:[UITableViewCell class]]) ||
-        (tableView = [tableView superViewOfType:[UITableView class]]) ||
-        (indexPath = [tableView indexPathForCell:cell]))
+    if (!(cell = [view superViewOfType:[UITableViewCell class]]) ||
+        !(tableView = [cell superViewOfType:[UITableView class]]) ||
+        !(indexPath = [tableView indexPathForCell:cell]))
     {
         return;
     }
@@ -531,4 +552,12 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
                          forView:stepper];
 }
 
+#pragma mark — UISwitch
+
+- (void)switchCellSwitchValueChanged:(UISwitch *)switchCtrl
+{
+    NSNumber *value = @(switchCtrl.on);
+
+    [self sendChangeValueMessage:value forView:switchCtrl];
+}
 @end

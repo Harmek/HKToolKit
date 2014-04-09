@@ -261,9 +261,17 @@
                                    toItem:self.imageView
                                    attribute:NSLayoutAttributeLeft
                                    multiplier:1.
-                                   constant:20.];
+                                   constant:10.];
+    NSLayoutConstraint *trailing = [NSLayoutConstraint
+                                    constraintWithItem:textLabel
+                                    attribute:NSLayoutAttributeTrailing
+                                    relatedBy:NSLayoutRelationEqual
+                                    toItem:textLabel.superview
+                                    attribute:NSLayoutAttributeRight
+                                    multiplier:1.
+                                    constant:-10.];
 
-    return @[centerY, leading];
+    return @[centerY, leading, trailing];
 }
 
 - (NSArray *)constraintsForRightDetailLabel:(UILabel *)detailLabel
@@ -321,9 +329,17 @@
                                 toItem:self.imageView
                                 attribute:NSLayoutAttributeLeft
                                 multiplier:1.
-                                constant:20.];
+                                constant:10.];
+    NSLayoutConstraint *trailing = [NSLayoutConstraint
+                                    constraintWithItem:detailLabel
+                                    attribute:NSLayoutAttributeTrailing
+                                    relatedBy:NSLayoutRelationEqual
+                                    toItem:detailLabel.superview
+                                    attribute:NSLayoutAttributeRight
+                                    multiplier:1.
+                                    constant:-10.];
 
-    return @[centerY, left];
+    return @[centerY, left, trailing];
 }
 
 @end
