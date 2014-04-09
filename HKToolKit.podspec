@@ -18,7 +18,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => ".", :tag => s.version.to_s }
   s.platform     = :ios, '7.0'
   s.requires_arc = true
-  s.resources = 'Assets'
   s.social_media_url = 'https://twitter.com/justPanos'
   s.frameworks = 'UIKit'
 
@@ -38,7 +37,7 @@ Pod::Spec.new do |s|
     geometryOp.source_files = 'Classes/HKCGPointOperators.{h,cpp}'
   end
   s.subspec 'HKPropertyListViewController' do |propertyList|
-    propertyList.source_files = 'Classes/ios/HKLabelCell.{h,m}', 'Classes/ios/HKNumericCell.{h,m}', 'Classes/ios/HKTextFieldCell.{h,m}', 'Classes/ios/HKPropertyListViewController.{h,m}', 'Classes/ios/HKPropertyListViewController_Protected.h'
+    propertyList.source_files = 'Classes/ios/HKLabelCell.{h,m}', 'Classes/ios/HKNumericCell.{h,m}', 'Classes/ios/HKTextFieldCell.{h,m}', 'Classes/ios/HKPropertyListViewController.{h,m}', 'Classes/ios/HKPropertyListViewController_Protected.h', 'Classes/ios/HKTableViewHeaderFooterCellView.{h,m}'
   end
   s.subspec 'HKModules' do |modules|
     modules.source_files = 'Classes/ios/HKRoutePattern.{h,m}', 'Classes/ios/HKModuleManager.{h,m}', 'Classes/ios/HKModule.{h,m}'
