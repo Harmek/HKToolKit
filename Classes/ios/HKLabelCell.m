@@ -231,9 +231,17 @@
                                    attribute:NSLayoutAttributeRight
                                    multiplier:1.
                                    constant:8.];
+    NSLayoutConstraint *width = [NSLayoutConstraint
+                                   constraintWithItem:textLabel
+                                   attribute:NSLayoutAttributeWidth
+                                   relatedBy:NSLayoutRelationLessThanOrEqual
+                                   toItem:textLabel.superview
+                                   attribute:NSLayoutAttributeWidth
+                                   multiplier:.5
+                                   constant:.0];
 //    leading.priority = UILayoutPriorityRequired;
 
-    return @[centerY, leading];
+    return @[centerY, leading, width];
 }
 
 - (NSArray *)constraintsForSubtitleTextLabel:(UILabel *)textLabel
@@ -263,10 +271,10 @@
     UILabel *textLabel = self.textLabel;
     NSLayoutConstraint *centerY = [NSLayoutConstraint
                                    constraintWithItem:detailLabel
-                                   attribute:NSLayoutAttributeBaseline
+                                   attribute:NSLayoutAttributeCenterY
                                    relatedBy:NSLayoutRelationEqual
-                                   toItem:textLabel
-                                   attribute:NSLayoutAttributeBaseline
+                                   toItem:detailLabel.superview
+                                   attribute:NSLayoutAttributeCenterY
                                    multiplier:1.
                                    constant:0.];
     NSLayoutConstraint *left = [NSLayoutConstraint
@@ -285,8 +293,15 @@
                                  attribute:NSLayoutAttributeRight
                                  multiplier:1.
                                  constant:-8.];
-
-    return @[centerY, left, right];
+    NSLayoutConstraint *width = [NSLayoutConstraint
+                                 constraintWithItem:detailLabel
+                                 attribute:NSLayoutAttributeWidth
+                                 relatedBy:NSLayoutRelationLessThanOrEqual
+                                 toItem:detailLabel.superview
+                                 attribute:NSLayoutAttributeWidth
+                                 multiplier:.5
+                                 constant:.0];
+    return @[centerY, left, right, width];
 }
 
 - (NSArray *)constraintsForSubtitleDetailLabel:(UILabel *)detailLabel
