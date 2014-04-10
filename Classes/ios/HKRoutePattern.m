@@ -41,7 +41,7 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
 
 @property (nonatomic, strong) NSArray *parameters;
 @property (nonatomic, strong) NSIndexSet *parametersIndexes;
-@property (nonatomic, strong) NSURLComponents *urlComponents;
+@property (nonatomic, strong) NSURL *url;
 @property (nonatomic, strong) NSRegularExpression *regularExpression;
 
 @end
@@ -80,18 +80,18 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
         return;
     }
     _pattern = [pattern copy];
-    self.urlComponents = [NSURLComponents componentsWithString:_pattern];
+    self.url = [NSURL URLWithString:_pattern];
 }
 
-- (void)setUrlComponents:(NSURLComponents *)urlComponents
+- (void)setUrl:(NSURL *)url
 {
-    if (_urlComponents == urlComponents)
+    if (_url == url)
     {
         return;
     }
 
-    _urlComponents = urlComponents;
-    NSArray *pathComponents = [_urlComponents.path pathComponents];
+    _url = url;
+    NSArray *pathComponents = [_url.path pathComponents];
     NSIndexSet *indexes = [pathComponents
                            indexesOfObjectsPassingTest:[[self class]
                                                         startsWithColonBlock]];
@@ -99,15 +99,16 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
     self.parameters = [[pathComponents objectsAtIndexes:indexes]
                        valueForKey:NSStringFromSelector(@selector(copyWithoutColon))];
 
-    NSMutableArray *patternPathComponents = [[self.urlComponents.path pathComponents] mutableCopy];
+    NSMutableArray *patternPathComponents = [[self.url.path pathComponents] mutableCopy];
     [self.parametersIndexes
      enumerateIndexesWithOptions:0
      usingBlock:^(NSUInteger idx, BOOL *stop) {
          [patternPathComponents replaceObjectAtIndex:idx withObject:@"([^\\/]+)"];
      }];
-    NSURLComponents *regexUrlComponents = [self.urlComponents copy];
-    regexUrlComponents.path  = patternPathComponents ? [NSString pathWithComponents:patternPathComponents] : nil;
-    NSString *regexPattern = [NSString stringWithFormat:@"^%@$", [[[regexUrlComponents URL] absoluteString] stringByRemovingPercentEncoding]];
+    NSString *path = patternPathComponents.count ? [NSString pathWithComponents:patternPathComponents] : nil;
+    NSURL *regexUrl = path ? [[NSURL alloc] initWithScheme:self.url.scheme host:self.url.host path:path] : [self.url copy];
+    NSString *regexPattern = [NSString stringWithFormat:@"^%@$", [[regexUrl absoluteString]
+                                                                      stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression
                                   regularExpressionWithPattern:regexPattern
@@ -124,13 +125,12 @@ typedef BOOL (^HKPatternArrayTest)(id obj, NSUInteger idx, BOOL *stop);
 {
     NSArray *resolvedParameters = [parameters objectsForKeys:self.parameters
                                               notFoundMarker:@""];
-    NSMutableArray *pathComponents = [[self.urlComponents.path pathComponents] mutableCopy];
+    NSMutableArray *pathComponents = [[self.url.path pathComponents] mutableCopy];
     [pathComponents replaceObjectsAtIndexes:self.parametersIndexes withObjects:resolvedParameters];
+    NSString *path = pathComponents.count ? [NSString pathWithComponents:pathComponents] : nil;
+    NSURL *resolvedUrlComponents = path ? [[NSURL alloc] initWithScheme:self.url.scheme host:self.url.host path:path] : [self.url copy];
 
-    NSURLComponents *resolvedUrlComponents = [self.urlComponents copy];
-    resolvedUrlComponents.path = [NSString pathWithComponents:pathComponents];
-
-    return [[[resolvedUrlComponents URL] absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return [[resolvedUrlComponents absoluteString] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (BOOL)matchesPath:(NSString *)path

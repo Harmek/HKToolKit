@@ -26,7 +26,7 @@
     static UIFont *s_font = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        s_font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+        s_font = [UIFont boldSystemFontOfSize:17.];
     });
 
     return s_font;
@@ -37,7 +37,7 @@
     static UIFont *s_font = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        s_font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+        s_font = [UIFont systemFontOfSize:14.];
     });
 
     return s_font;
