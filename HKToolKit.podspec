@@ -42,5 +42,7 @@ Pod::Spec.new do |s|
   s.subspec 'HKModules' do |modules|
     modules.source_files = 'Classes/ios/HKRoutePattern.{h,m}', 'Classes/ios/HKModuleManager.{h,m}', 'Classes/ios/HKModule.{h,m}'
   end
-  
+  s.subspec 'HKSideView' do |modules|
+    modules.source_files = 'Classes/ios/HKSideView/*.{h,m}'
+  end
 end
