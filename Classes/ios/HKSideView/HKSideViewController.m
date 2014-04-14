@@ -31,6 +31,7 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
 @end
 
 @implementation HKSideViewController
+@synthesize panGestureRecognizer = _panGestureRecognizer;
 
 + (NSArray *)cellIdentifiers
 {
@@ -167,17 +168,48 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
 
 #pragma mark — Gesture Recognizers
 
+- (void)setPanGestureDisabled:(BOOL)panGestureDisabled
+{
+    _panGestureDisabled = panGestureDisabled;
+    if (panGestureDisabled)
+    {
+        self.panGestureRecognizer = nil;
+    }
+    else
+    {
+        self.panGestureRecognizer = self.panGestureRecognizer;
+    }
+}
+
 - (UIPanGestureRecognizer *)panGestureRecognizer
 {
-    if (!_panGestureRecognizer)
+    if (!_panGestureRecognizer && !self.panGestureDisabled)
     {
         self.panGestureRecognizer = [[UIPanGestureRecognizer alloc]
                                      initWithTarget:self
                                      action:@selector(panGestureRecognized:)];
-        [self.collectionView addGestureRecognizer:_panGestureRecognizer];
     }
 
     return _panGestureRecognizer;
+}
+
+- (void)setPanGestureRecognizer:(UIPanGestureRecognizer *)panGestureRecognizer
+{
+    if (_panGestureRecognizer == panGestureRecognizer)
+    {
+        return;
+    }
+
+    if (_panGestureRecognizer)
+    {
+        [self.collectionView removeGestureRecognizer:_panGestureRecognizer];
+    }
+
+    _panGestureRecognizer = panGestureRecognizer;
+    if (panGestureRecognizer)
+    {
+        [self.collectionView addGestureRecognizer:panGestureRecognizer];
+    }
 }
 
 - (CGPoint)maxContentOffset
@@ -273,17 +305,10 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
                 default:
                     break;
             }
-            NSInteger indexDiff = 0;
-            if (direction < .0)
-            {
-                indexDiff = 1;
-            }
-            else
-            {
-                indexDiff = -1;
-            }
+            NSInteger indexDiff = copysign(1., -direction);
             NSIndexPath *presentingIndexPath = self.presentingIndexPath;
-            NSInteger section = MAX(.0, MIN(presentingIndexPath.section + indexDiff, [self.collectionView numberOfSections]));
+            NSInteger section = MAX(.0, MIN(presentingIndexPath.section + indexDiff,
+                                            [self.collectionView numberOfSections]));
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0
                                                          inSection:section];
             [self setPresentingIndexPath:indexPath animated:YES];
