@@ -215,14 +215,23 @@
 
 - (NSArray *)constraintsForRightTextLabel:(UILabel *)textLabel
 {
-    NSLayoutConstraint *centerY = [NSLayoutConstraint
-                                   constraintWithItem:textLabel
-                                   attribute:NSLayoutAttributeCenterY
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:self.contentView
-                                   attribute:NSLayoutAttributeCenterY
-                                   multiplier:1.
-                                   constant:0.];
+
+    NSLayoutConstraint *top = [NSLayoutConstraint
+                               constraintWithItem:textLabel
+                               attribute:NSLayoutAttributeTop
+                               relatedBy:NSLayoutRelationEqual
+                               toItem:textLabel.superview
+                               attribute:NSLayoutAttributeTop
+                               multiplier:1.
+                               constant:5.];
+    NSLayoutConstraint *bottom = [NSLayoutConstraint
+                                  constraintWithItem:textLabel
+                                  attribute:NSLayoutAttributeBottom
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:textLabel.superview
+                                  attribute:NSLayoutAttributeBottom
+                                  multiplier:1.
+                                  constant:-5.];
     NSLayoutConstraint *leading = [NSLayoutConstraint
                                    constraintWithItem:textLabel
                                    attribute:NSLayoutAttributeLeading
@@ -241,7 +250,7 @@
                                    constant:.0];
 //    leading.priority = UILayoutPriorityRequired;
 
-    return @[centerY, leading, width];
+    return @[top, bottom, leading, width];
 }
 
 - (NSArray *)constraintsForSubtitleTextLabel:(UILabel *)textLabel
@@ -277,14 +286,22 @@
 - (NSArray *)constraintsForRightDetailLabel:(UILabel *)detailLabel
 {
     UILabel *textLabel = self.textLabel;
-    NSLayoutConstraint *centerY = [NSLayoutConstraint
-                                   constraintWithItem:detailLabel
-                                   attribute:NSLayoutAttributeCenterY
-                                   relatedBy:NSLayoutRelationEqual
-                                   toItem:detailLabel.superview
-                                   attribute:NSLayoutAttributeCenterY
-                                   multiplier:1.
-                                   constant:0.];
+    NSLayoutConstraint *top = [NSLayoutConstraint
+                               constraintWithItem:detailLabel
+                               attribute:NSLayoutAttributeTop
+                               relatedBy:NSLayoutRelationEqual
+                               toItem:detailLabel.superview
+                               attribute:NSLayoutAttributeTop
+                               multiplier:1.
+                               constant:5.];
+    NSLayoutConstraint *bottom = [NSLayoutConstraint
+                                  constraintWithItem:detailLabel
+                                  attribute:NSLayoutAttributeBottom
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:detailLabel.superview
+                                  attribute:NSLayoutAttributeBottom
+                                  multiplier:1.
+                                  constant:-5.];
     NSLayoutConstraint *left = [NSLayoutConstraint
                                 constraintWithItem:detailLabel
                                 attribute:NSLayoutAttributeLeading
@@ -309,7 +326,7 @@
                                  attribute:NSLayoutAttributeWidth
                                  multiplier:.5
                                  constant:.0];
-    return @[centerY, left, right, width];
+    return @[top, left, bottom, right, width];
 }
 
 - (NSArray *)constraintsForSubtitleDetailLabel:(UILabel *)detailLabel
