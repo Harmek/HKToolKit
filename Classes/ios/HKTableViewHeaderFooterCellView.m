@@ -23,6 +23,9 @@
     {
         self.cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                            reuseIdentifier:nil];
+        _cell.backgroundColor = [UIColor clearColor];
+        _cell.backgroundView = nil;
+        _cell.contentView.backgroundColor = [UIColor clearColor];
     }
 
     return _cell;
