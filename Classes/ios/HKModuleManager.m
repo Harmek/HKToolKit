@@ -18,6 +18,7 @@ NSString * const HKModuleTransitionPresentationCompleteBlockName = @"HKModuleTra
 NSString * const HKModuleTransitionPopoverArrowDirectionName = @"HKModuleTransitionPopoverArrowDirection";
 NSString * const HKModuleTransitionPopoverContentSizeName = @"HKModuleTransitionPopoverContentSize";
 NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleTransitionEmbedInNavigationController";
+NSString * const HKModuleTransitionTransitioningDelegateName = @"HKModuleTransitionTransitioningDelegate";
 
 @interface HKModuleManager ()
 
@@ -34,7 +35,7 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
     dispatch_once(&onceToken, ^{
         s_manager = [[[self class] alloc] init];
     });
-    
+
     return s_manager;
 }
 
@@ -44,7 +45,7 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
     {
         self.modules = [NSMutableArray array];
     }
-    
+
     return _modules;
 }
 
@@ -54,7 +55,7 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
 {
     NSParameterAssert(viewControllerClass != nil);
     NSParameterAssert(pattern != nil);
-    
+
     HKModule *module = [[HKModule alloc]
                         initWithViewControllerClass:viewControllerClass
                         pattern:pattern
@@ -71,10 +72,10 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
     {
         return nil;
     }
-    
+
     HKModule *matchingModule = self.modules[index];
     id result = [matchingModule instanciateWithPath:path];
-    
+
     return result;
 }
 
@@ -103,11 +104,11 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
                      [self class],
                      sourceViewController,
                      toViewController);
-            
+
             [sourceViewController.navigationController
              pushViewController:toViewController
              animated:animated.boolValue];
-            
+
             return toViewController;
         }
         case HKModuleTransitionTypeModal:
@@ -120,6 +121,10 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
             }
             toViewController.modalPresentationStyle = presentationStyle.integerValue;
             toViewController.modalTransitionStyle = transitionStyle.integerValue;
+            if ([toViewController respondsToSelector:@selector(setTransitioningDelegate:)])
+            {
+                toViewController.transitioningDelegate = options[HKModuleTransitionTransitioningDelegateName];
+            }
             HKModuleTransitionPresentationCompleteBlock block = options[HKModuleTransitionPresentationCompleteBlockName];
             [sourceViewController
              presentViewController:toViewController
@@ -130,7 +135,7 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
                      block(toViewController);
                  }
              }];
-            
+
             return toViewController;
         }
         case HKModuleTransitionTypePopover:
@@ -147,13 +152,13 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
             {
                 ppc.popoverContentSize = contentSize.CGSizeValue;
             }
-            
+
             [ppc
              presentPopoverFromRect:sender.frame
              inView:sender.superview
              permittedArrowDirections:arrowDirection.unsignedIntegerValue
              animated:animated.boolValue];
-            
+
             return ppc;
         }
         case HKModuleTransitionTypeEmbed:
@@ -161,11 +166,11 @@ NSString * const HKModuleTransitionEmbedInNavigationControllerName = @"HKModuleT
             [toViewController willMoveToParentViewController:sourceViewController];
             [sourceViewController addChildViewController:toViewController];
             [toViewController didMoveToParentViewController:sourceViewController];
-            
+
             return toViewController;
         }
     }
-    
+
     return nil;
 }
 

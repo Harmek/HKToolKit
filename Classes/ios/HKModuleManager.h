@@ -16,6 +16,7 @@ extern NSString * const HKModuleTransitionPresentationCompleteBlockName;
 extern NSString * const HKModuleTransitionPopoverArrowDirectionName;
 extern NSString * const HKModuleTransitionPopoverContentSizeName;
 extern NSString * const HKModuleTransitionEmbedInNavigationControllerName;
+extern NSString * const HKModuleTransitionTransitioningDelegateName;
 
 typedef void (^HKModuleTransitionPresentationCompleteBlock) (UIViewController *toViewController);
 
