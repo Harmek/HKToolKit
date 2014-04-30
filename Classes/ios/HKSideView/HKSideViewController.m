@@ -28,6 +28,8 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
 
 @property (nonatomic, assign) CGPoint startingContentOffset;
 
+@property (nonatomic, assign) BOOL oldPanGestureDisabled;
+
 @end
 
 @implementation HKSideViewController
@@ -146,6 +148,12 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
                  forCellWithReuseIdentifier:identifier];
      }];
     self.panGestureRecognizer = self.panGestureRecognizer;
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                               duration:(NSTimeInterval)duration
+{
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -394,6 +402,19 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
         return;
     }
 
+    if (_presentingIndexPath && self.panGestureEnabledWhenSide)
+    {
+        if (![presentingIndexPath isEqual:[[self class] centerIndexPath]])
+        {
+            self.oldPanGestureDisabled = self.panGestureDisabled;
+            self.panGestureDisabled = NO;
+        }
+        else
+        {
+            self.panGestureDisabled = self.oldPanGestureDisabled;
+        }
+    }
+
     _presentingIndexPath = [presentingIndexPath copy];
     [self.collectionView
      scrollToItemAtIndexPath:_presentingIndexPath
@@ -520,7 +541,7 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
          result = result.parentViewController)
     {
     }
-
+    
     return (HKSideViewController *)result;
 }
 

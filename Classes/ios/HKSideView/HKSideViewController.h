@@ -42,6 +42,7 @@ typedef void (^HKSideViewDirectionChangeCompletion) (BOOL complete);
            setter = setRightViewController:) UIViewController *bottomViewController;
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, assign) BOOL panGestureDisabled;
+@property (nonatomic, assign) BOOL panGestureEnabledWhenSide;
 @property (nonatomic, copy) NSIndexPath *presentingIndexPath;
 
 + (NSIndexPath *)leftIndexPath;
