@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1D2E1DB418CD7D7B008328BA /* HKSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D2E1DB318CD7D7B008328BA /* HKSecondViewController.m */; };
 		1DAA0612189DC66E006C69C3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DAA0611189DC66E006C69C3 /* Foundation.framework */; };
 		1DAA0614189DC66E006C69C3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DAA0613189DC66E006C69C3 /* CoreGraphics.framework */; };
 		1DAA0616189DC66E006C69C3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DAA0615189DC66E006C69C3 /* UIKit.framework */; };
@@ -39,8 +38,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1D2E1DB218CD7D7B008328BA /* HKSecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKSecondViewController.h; sourceTree = "<group>"; };
-		1D2E1DB318CD7D7B008328BA /* HKSecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKSecondViewController.m; sourceTree = "<group>"; };
 		1DAA060E189DC66E006C69C3 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DAA0611189DC66E006C69C3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DAA0613189DC66E006C69C3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -135,8 +132,6 @@
 				1DAA062A189DC66E006C69C3 /* HKViewController.m */,
 				1DAA062C189DC66E006C69C3 /* Images.xcassets */,
 				1DAA0618189DC66E006C69C3 /* Supporting Files */,
-				1D2E1DB218CD7D7B008328BA /* HKSecondViewController.h */,
-				1D2E1DB318CD7D7B008328BA /* HKSecondViewController.m */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -338,7 +333,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1DAA062B189DC66E006C69C3 /* HKViewController.m in Sources */,
-				1D2E1DB418CD7D7B008328BA /* HKSecondViewController.m in Sources */,
 				1DAA061E189DC66E006C69C3 /* main.m in Sources */,
 				1DAA0622189DC66E006C69C3 /* HKAppDelegate.m in Sources */,
 			);

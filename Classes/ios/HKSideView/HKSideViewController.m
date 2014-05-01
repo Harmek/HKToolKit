@@ -28,8 +28,6 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
 
 @property (nonatomic, assign) CGPoint startingContentOffset;
 
-@property (nonatomic, assign) BOOL oldPanGestureDisabled;
-
 @end
 
 @implementation HKSideViewController
@@ -189,6 +187,12 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
     }
 }
 
+- (void)setPanGestureEnabledOnSides:(BOOL)panGestureEnabledOnSides
+{
+    _panGestureEnabledOnSides = panGestureEnabledOnSides;
+    self.panGestureDisabled = !panGestureEnabledOnSides;
+}
+
 - (UIPanGestureRecognizer *)panGestureRecognizer
 {
     if (!_panGestureRecognizer && !self.panGestureDisabled)
@@ -234,6 +238,12 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
 
 - (void)panGestureRecognized:(UIPanGestureRecognizer *)panGesture
 {
+    if (self.panGestureEnabledOnSides
+        && [self.presentingIndexPath isEqual:[[self class] centerIndexPath]])
+    {
+        return;
+    }
+
     switch (panGesture.state)
     {
         case UIGestureRecognizerStateBegan:
@@ -316,7 +326,7 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
             NSInteger indexDiff = copysign(1., -direction);
             NSIndexPath *presentingIndexPath = self.presentingIndexPath;
             NSInteger section = MAX(.0, MIN(presentingIndexPath.section + indexDiff,
-                                            [self.collectionView numberOfSections]));
+                                            [self.collectionView numberOfSections] - 1));
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0
                                                          inSection:section];
             [self setPresentingIndexPath:indexPath animated:YES];
@@ -400,19 +410,6 @@ static NSString * const HKSideViewRightIdentifier = @"HKSideViewRightCell";
     if (_presentingIndexPath == presentingIndexPath)
     {
         return;
-    }
-
-    if (_presentingIndexPath && self.panGestureEnabledWhenSide)
-    {
-        if (![presentingIndexPath isEqual:[[self class] centerIndexPath]])
-        {
-            self.oldPanGestureDisabled = self.panGestureDisabled;
-            self.panGestureDisabled = NO;
-        }
-        else
-        {
-            self.panGestureDisabled = self.oldPanGestureDisabled;
-        }
     }
 
     _presentingIndexPath = [presentingIndexPath copy];
