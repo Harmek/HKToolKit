@@ -148,8 +148,8 @@
                 break;
         }
         [self.contentView addConstraints:constraints];
-//        [textLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
-//                                     forAxis:UILayoutConstraintAxisHorizontal];
+        //        [textLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
+        //                                     forAxis:UILayoutConstraintAxisHorizontal];
     }
 }
 
@@ -208,8 +208,8 @@
         }
 
         [self.contentView addConstraints:constraints];
-//        [detailTextLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
-//                                           forAxis:UILayoutConstraintAxisHorizontal];
+        //        [detailTextLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh
+        //                                           forAxis:UILayoutConstraintAxisHorizontal];
     }
 }
 
@@ -224,14 +224,14 @@
                                attribute:NSLayoutAttributeTop
                                multiplier:1.
                                constant:5.];
-    NSLayoutConstraint *bottom = [NSLayoutConstraint
-                                  constraintWithItem:textLabel
-                                  attribute:NSLayoutAttributeBottom
-                                  relatedBy:NSLayoutRelationEqual
-                                  toItem:textLabel.superview
-                                  attribute:NSLayoutAttributeBottom
-                                  multiplier:1.
-                                  constant:-5.];
+    //    NSLayoutConstraint *bottom = [NSLayoutConstraint
+    //                                  constraintWithItem:textLabel
+    //                                  attribute:NSLayoutAttributeBottom
+    //                                  relatedBy:NSLayoutRelationEqual
+    //                                  toItem:textLabel.superview
+    //                                  attribute:NSLayoutAttributeBottom
+    //                                  multiplier:1.
+    //                                  constant:-5.];
     NSLayoutConstraint *leading = [NSLayoutConstraint
                                    constraintWithItem:textLabel
                                    attribute:NSLayoutAttributeLeading
@@ -239,18 +239,24 @@
                                    toItem:self.imageView
                                    attribute:NSLayoutAttributeRight
                                    multiplier:1.
-                                   constant:8.];
-    NSLayoutConstraint *width = [NSLayoutConstraint
-                                   constraintWithItem:textLabel
-                                   attribute:NSLayoutAttributeWidth
-                                   relatedBy:NSLayoutRelationLessThanOrEqual
-                                   toItem:textLabel.superview
-                                   attribute:NSLayoutAttributeWidth
-                                   multiplier:.5
-                                   constant:.0];
-//    leading.priority = UILayoutPriorityRequired;
+                                   constant:10.];
+    //    leading.priority = UILayoutPriorityRequired;
+    //    NSLayoutConstraint *width = [NSLayoutConstraint
+    //                                   constraintWithItem:textLabel
+    //                                   attribute:NSLayoutAttributeWidth
+    //                                   relatedBy:NSLayoutRelationEqual
+    //                                   toItem:textLabel.superview
+    //                                   attribute:NSLayoutAttributeWidth
+    //                                   multiplier:.25
+    //                                   constant:-10.];
+    //    width.priority = UILayoutPriorityRequired;
+    //    leading.priority = UILayoutPriorityRequired;
 
-    return @[top, bottom, leading, width];
+    return @[top,
+             //             bottom,
+             leading,
+             //             width
+             ];
 }
 
 - (NSArray *)constraintsForSubtitleTextLabel:(UILabel *)textLabel
@@ -294,18 +300,18 @@
                                attribute:NSLayoutAttributeTop
                                multiplier:1.
                                constant:5.];
-    NSLayoutConstraint *bottom = [NSLayoutConstraint
-                                  constraintWithItem:detailLabel
-                                  attribute:NSLayoutAttributeBottom
-                                  relatedBy:NSLayoutRelationEqual
-                                  toItem:detailLabel.superview
-                                  attribute:NSLayoutAttributeBottom
-                                  multiplier:1.
-                                  constant:-5.];
+    //    NSLayoutConstraint *bottom = [NSLayoutConstraint
+    //                                  constraintWithItem:detailLabel
+    //                                  attribute:NSLayoutAttributeBottom
+    //                                  relatedBy:NSLayoutRelationEqual
+    //                                  toItem:detailLabel.superview
+    //                                  attribute:NSLayoutAttributeBottom
+    //                                  multiplier:1.
+    //                                  constant:-5.];
     NSLayoutConstraint *left = [NSLayoutConstraint
                                 constraintWithItem:detailLabel
                                 attribute:NSLayoutAttributeLeading
-                                relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                relatedBy:NSLayoutRelationEqual
                                 toItem:textLabel
                                 attribute:NSLayoutAttributeRight
                                 multiplier:1.
@@ -314,19 +320,24 @@
                                  constraintWithItem:detailLabel
                                  attribute:NSLayoutAttributeTrailing
                                  relatedBy:NSLayoutRelationEqual
-                                 toItem:self.contentView
+                                 toItem:detailLabel.superview
                                  attribute:NSLayoutAttributeRight
                                  multiplier:1.
                                  constant:-8.];
     NSLayoutConstraint *width = [NSLayoutConstraint
                                  constraintWithItem:detailLabel
                                  attribute:NSLayoutAttributeWidth
-                                 relatedBy:NSLayoutRelationLessThanOrEqual
+                                 relatedBy:NSLayoutRelationEqual
                                  toItem:detailLabel.superview
                                  attribute:NSLayoutAttributeWidth
-                                 multiplier:.5
+                                 multiplier:.6
                                  constant:.0];
-    return @[top, left, bottom, right, width];
+    return @[top,
+             left,
+             //             bottom,
+             right,
+             width
+             ];
 }
 
 - (NSArray *)constraintsForSubtitleDetailLabel:(UILabel *)detailLabel
@@ -355,7 +366,7 @@
                                     attribute:NSLayoutAttributeRight
                                     multiplier:1.
                                     constant:-10.];
-
+    
     return @[centerY, left, trailing];
 }
 
