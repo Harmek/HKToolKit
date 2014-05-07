@@ -43,6 +43,22 @@
     return s_font;
 }
 
+- (void)setDetailStyle:(HKLabelCellDetailStyle)detailStyle
+{
+    if (_detailStyle == detailStyle)
+    {
+        return;
+    }
+
+    _detailStyle = detailStyle;
+    UILabel *textLabel = self.textLabel;
+    UILabel *detailTextLabel = self.detailTextLabel;
+    self.textLabel = nil;
+    self.detailTextLabel = nil;
+    self.textLabel = textLabel;
+    self.detailTextLabel = detailTextLabel;
+}
+
 - (UIImageView *)imageView
 {
     if (!_imageView)
@@ -105,7 +121,6 @@
     {
         self.textLabel = [[UILabel alloc] init];
         self.textLabel.font = [HKLabelCell textDefaultFont];
-        self.textLabel.textAlignment = NSTextAlignmentLeft;
     }
 
     return _textLabel;
@@ -126,6 +141,14 @@
     _textLabel = textLabel;
     if (textLabel)
     {
+        static const NSTextAlignment s_textAlignments[HKLabelCellDetailStyleCount] =
+        {
+            NSTextAlignmentLeft,
+            NSTextAlignmentRight,
+            NSTextAlignmentLeft
+        };
+
+        textLabel.textAlignment = s_textAlignments[self.detailStyle];
         textLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:textLabel];
 
@@ -135,6 +158,12 @@
             case HKLabelCellDetailStyleRight:
             {
                 constraints = [self constraintsForRightTextLabel:textLabel];
+
+                break;
+            }
+            case HKLabelCellDetailStyleLeft:
+            {
+                constraints = [self constraintsForLeftTextLabel:textLabel];
 
                 break;
             }
@@ -157,15 +186,8 @@
 {
     if (!_detailTextLabel)
     {
-        static const NSTextAlignment s_textAlignments[SNLabelCellDetailStyleCount] =
-        {
-            NSTextAlignmentRight,
-            NSTextAlignmentCenter
-        };
-
         self.detailTextLabel = [[UILabel alloc] init];
         _detailTextLabel.font = [HKLabelCell detailTextDefaultFont];
-        _detailTextLabel.textAlignment = s_textAlignments[self.detailStyle];
     }
 
     return _detailTextLabel;
@@ -186,6 +208,14 @@
     _detailTextLabel = detailTextLabel;
     if (detailTextLabel)
     {
+        static const NSTextAlignment s_textAlignments[HKLabelCellDetailStyleCount] =
+        {
+            NSTextAlignmentRight,
+            NSTextAlignmentLeft,
+            NSTextAlignmentLeft
+        };
+
+        detailTextLabel.textAlignment = s_textAlignments[self.detailStyle];
         detailTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:detailTextLabel];
         NSArray *constraints = nil;
@@ -194,6 +224,12 @@
             case HKLabelCellDetailStyleRight:
             {
                 constraints = [self constraintsForRightDetailLabel:detailTextLabel];
+
+                break;
+            }
+            case HKLabelCellDetailStyleLeft:
+            {
+                constraints = [self constraintsForLeftDetailLabel:detailTextLabel];
 
                 break;
             }
@@ -213,6 +249,29 @@
     }
 }
 
+- (NSArray *)constraintsForLeftTextLabel:(UILabel *)textLabel
+{
+
+    NSLayoutConstraint *top = [NSLayoutConstraint
+                               constraintWithItem:textLabel
+                               attribute:NSLayoutAttributeTop
+                               relatedBy:NSLayoutRelationEqual
+                               toItem:textLabel.superview
+                               attribute:NSLayoutAttributeTop
+                               multiplier:1.
+                               constant:5.];
+    NSLayoutConstraint *leading = [NSLayoutConstraint
+                                   constraintWithItem:textLabel
+                                   attribute:NSLayoutAttributeLeading
+                                   relatedBy:NSLayoutRelationEqual
+                                   toItem:self.imageView
+                                   attribute:NSLayoutAttributeRight
+                                   multiplier:1.
+                                   constant:10.];
+
+    return @[top, leading];
+}
+
 - (NSArray *)constraintsForRightTextLabel:(UILabel *)textLabel
 {
 
@@ -224,14 +283,14 @@
                                attribute:NSLayoutAttributeTop
                                multiplier:1.
                                constant:5.];
-    //    NSLayoutConstraint *bottom = [NSLayoutConstraint
-    //                                  constraintWithItem:textLabel
-    //                                  attribute:NSLayoutAttributeBottom
-    //                                  relatedBy:NSLayoutRelationEqual
-    //                                  toItem:textLabel.superview
-    //                                  attribute:NSLayoutAttributeBottom
-    //                                  multiplier:1.
-    //                                  constant:-5.];
+    NSLayoutConstraint *bottom = [NSLayoutConstraint
+                                  constraintWithItem:textLabel
+                                  attribute:NSLayoutAttributeBottom
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:textLabel.superview
+                                  attribute:NSLayoutAttributeBottom
+                                  multiplier:1.
+                                  constant:-5.];
     NSLayoutConstraint *leading = [NSLayoutConstraint
                                    constraintWithItem:textLabel
                                    attribute:NSLayoutAttributeLeading
@@ -239,24 +298,18 @@
                                    toItem:self.imageView
                                    attribute:NSLayoutAttributeRight
                                    multiplier:1.
-                                   constant:10.];
-    //    leading.priority = UILayoutPriorityRequired;
-    //    NSLayoutConstraint *width = [NSLayoutConstraint
-    //                                   constraintWithItem:textLabel
-    //                                   attribute:NSLayoutAttributeWidth
-    //                                   relatedBy:NSLayoutRelationEqual
-    //                                   toItem:textLabel.superview
-    //                                   attribute:NSLayoutAttributeWidth
-    //                                   multiplier:.25
-    //                                   constant:-10.];
-    //    width.priority = UILayoutPriorityRequired;
+                                   constant:8.];
+    NSLayoutConstraint *width = [NSLayoutConstraint
+                                 constraintWithItem:textLabel
+                                 attribute:NSLayoutAttributeWidth
+                                 relatedBy:NSLayoutRelationLessThanOrEqual
+                                 toItem:textLabel.superview
+                                 attribute:NSLayoutAttributeWidth
+                                 multiplier:.5
+                                 constant:.0];
     //    leading.priority = UILayoutPriorityRequired;
 
-    return @[top,
-             //             bottom,
-             leading,
-             //             width
-             ];
+    return @[top, bottom, leading, width];
 }
 
 - (NSArray *)constraintsForSubtitleTextLabel:(UILabel *)textLabel
@@ -289,7 +342,7 @@
     return @[centerY, leading, trailing];
 }
 
-- (NSArray *)constraintsForRightDetailLabel:(UILabel *)detailLabel
+- (NSArray *)constraintsForLeftDetailLabel:(UILabel *)detailLabel
 {
     UILabel *textLabel = self.textLabel;
     NSLayoutConstraint *top = [NSLayoutConstraint
@@ -300,14 +353,6 @@
                                attribute:NSLayoutAttributeTop
                                multiplier:1.
                                constant:5.];
-    //    NSLayoutConstraint *bottom = [NSLayoutConstraint
-    //                                  constraintWithItem:detailLabel
-    //                                  attribute:NSLayoutAttributeBottom
-    //                                  relatedBy:NSLayoutRelationEqual
-    //                                  toItem:detailLabel.superview
-    //                                  attribute:NSLayoutAttributeBottom
-    //                                  multiplier:1.
-    //                                  constant:-5.];
     NSLayoutConstraint *left = [NSLayoutConstraint
                                 constraintWithItem:detailLabel
                                 attribute:NSLayoutAttributeLeading
@@ -332,12 +377,54 @@
                                  attribute:NSLayoutAttributeWidth
                                  multiplier:.6
                                  constant:.0];
-    return @[top,
-             left,
-             //             bottom,
-             right,
-             width
-             ];
+
+    return @[top, left, right, width];
+}
+
+- (NSArray *)constraintsForRightDetailLabel:(UILabel *)detailLabel
+{
+    UILabel *textLabel = self.textLabel;
+    NSLayoutConstraint *top = [NSLayoutConstraint
+                               constraintWithItem:detailLabel
+                               attribute:NSLayoutAttributeTop
+                               relatedBy:NSLayoutRelationEqual
+                               toItem:detailLabel.superview
+                               attribute:NSLayoutAttributeTop
+                               multiplier:1.
+                               constant:5.];
+    NSLayoutConstraint *bottom = [NSLayoutConstraint
+                                  constraintWithItem:detailLabel
+                                  attribute:NSLayoutAttributeBottom
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:detailLabel.superview
+                                  attribute:NSLayoutAttributeBottom
+                                  multiplier:1.
+                                  constant:-5.];
+    NSLayoutConstraint *left = [NSLayoutConstraint
+                                constraintWithItem:detailLabel
+                                attribute:NSLayoutAttributeLeading
+                                relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                toItem:textLabel
+                                attribute:NSLayoutAttributeRight
+                                multiplier:1.
+                                constant:8.];
+    NSLayoutConstraint *right = [NSLayoutConstraint
+                                 constraintWithItem:detailLabel
+                                 attribute:NSLayoutAttributeTrailing
+                                 relatedBy:NSLayoutRelationEqual
+                                 toItem:self.contentView
+                                 attribute:NSLayoutAttributeRight
+                                 multiplier:1.
+                                 constant:-8.];
+    NSLayoutConstraint *width = [NSLayoutConstraint
+                                 constraintWithItem:detailLabel
+                                 attribute:NSLayoutAttributeWidth
+                                 relatedBy:NSLayoutRelationLessThanOrEqual
+                                 toItem:detailLabel.superview
+                                 attribute:NSLayoutAttributeWidth
+                                 multiplier:.5
+                                 constant:.0];
+    return @[top, left, bottom, right, width];
 }
 
 - (NSArray *)constraintsForSubtitleDetailLabel:(UILabel *)detailLabel

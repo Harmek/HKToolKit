@@ -11,9 +11,10 @@
 typedef NS_ENUM(NSUInteger, HKLabelCellDetailStyle)
 {
     HKLabelCellDetailStyleRight = 0,
+    HKLabelCellDetailStyleLeft,
     HKLabelCellDetailStyleSubtitle,
-    
-    SNLabelCellDetailStyleCount
+
+    HKLabelCellDetailStyleCount
 };
 
 @interface HKLabelCell : UITableViewCell
