@@ -346,7 +346,7 @@ configureHeaderView:header
         {
             NSString *keyPath = sectionInfo[HKPropertyListIdKey];
             id targetObject = [self targetObjectForSectionIndex:sectionIndex];
-            if (keyPath)
+            if (keyPath.length)
             {
                 title = [targetObject valueForKeyPath:keyPath];
 
@@ -387,7 +387,7 @@ configureHeaderView:header
         {
             NSString *keyPath = rowInfo[HKPropertyListIdKey];
             id targetObject = [self targetObjectForSectionIndex:indexPath.section];
-            if (keyPath)
+            if (keyPath.length)
             {
                 cell.detailTextLabel.text = [targetObject valueForKeyPath:keyPath];
 
