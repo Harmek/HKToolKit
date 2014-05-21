@@ -72,6 +72,8 @@ typedef NS_ENUM(NSUInteger, HKPropertyListRowType)
 - (NSInteger)modifiedSectionIndex:(NSInteger)sectionIndex;
 - (id)targetObjectForSectionIndex:(NSInteger)sectionIndex;
 
+- (NSString *)tableView:(UITableView *)tableView cellIdentifierWithRowInfo:(NSDictionary *)rowInfo rowType:(HKPropertyListRowType)rowType atIndexPath:(NSIndexPath *)indexPath;
+
 - (void)tableView:(UITableView *)tableView configureHeaderView:(UITableViewHeaderFooterView *)header withSectionInfo:(NSDictionary *)sectionInfo andRowIdentifier:(NSString *)identifier atSectionIndex:(NSInteger)sectionIndex;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderWithSectionInfo:(NSDictionary *)sectionInfo atSectionIndex:(NSInteger)section;
@@ -80,7 +82,7 @@ typedef NS_ENUM(NSUInteger, HKPropertyListRowType)
     configureCell:(UITableViewCell *)cell
       withRowInfo:(NSDictionary *)rowInfo
           rowType:(HKPropertyListRowType)type
-    andRowIdentifier:(NSString *)identifier
+ andRowIdentifier:(NSString *)identifier
       atIndexPath:(NSIndexPath *)indexPath;
 
 - (CGFloat)tableView:(UITableView *)tableView

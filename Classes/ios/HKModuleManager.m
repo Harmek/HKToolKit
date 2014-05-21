@@ -82,7 +82,7 @@ NSString * const HKModuleTransitionTransitioningDelegateName = @"HKModuleTransit
 - (id)performSegueWithPath:(NSString *)path
                 parameters:(NSDictionary *)parameters
         fromViewController:(UIViewController *)sourceViewController
-                    sender:(UIView *)sender
+                    sender:(id)sender
                withOptions:(NSDictionary *)options
 {
     UIViewController *toViewController = [self instanciateViewControllerWithPath:path];
@@ -153,11 +153,20 @@ NSString * const HKModuleTransitionTransitioningDelegateName = @"HKModuleTransit
                 ppc.popoverContentSize = contentSize.CGSizeValue;
             }
 
-            [ppc
-             presentPopoverFromRect:sender.frame
-             inView:sender.superview
-             permittedArrowDirections:arrowDirection.unsignedIntegerValue
-             animated:animated.boolValue];
+            if ([sender isKindOfClass:[UIBarButtonItem class]])
+            {
+                [ppc presentPopoverFromBarButtonItem:sender
+                            permittedArrowDirections:arrowDirection.unsignedIntegerValue
+                                            animated:animated.boolValue];
+            }
+            else if ([sender isKindOfClass:[UIView class]])
+            {
+                [ppc
+                 presentPopoverFromRect:[sender frame]
+                 inView:[sender superview]
+                 permittedArrowDirections:arrowDirection.unsignedIntegerValue
+                 animated:animated.boolValue];
+            }
 
             return ppc;
         }
@@ -166,11 +175,11 @@ NSString * const HKModuleTransitionTransitioningDelegateName = @"HKModuleTransit
             [toViewController willMoveToParentViewController:sourceViewController];
             [sourceViewController addChildViewController:toViewController];
             [toViewController didMoveToParentViewController:sourceViewController];
-
+            
             return toViewController;
         }
     }
-
+    
     return nil;
 }
 

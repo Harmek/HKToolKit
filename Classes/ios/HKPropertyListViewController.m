@@ -64,9 +64,9 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
                        HKPropertyListRowTypeBooleanId : @(HKPropertyListRowTypeBoolean)
                        };
     });
-    
+
     NSNumber *rowType = s_rowTypes[self];
-    
+
     return rowType ? rowType.unsignedIntegerValue : HKPropertyListRowTypeLabel;
 }
 
@@ -83,9 +83,9 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
                              HKPropertyListAccessoryDetailButtonId : @(UITableViewCellAccessoryDetailButton)
                              };
     });
-    
+
     NSNumber *accessoryType = s_accessoryTypes[self];
-    
+
     return accessoryType ? accessoryType.integerValue : UITableViewCellAccessoryNone;
 }
 
@@ -101,7 +101,7 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
          superview = superview.superview)
     {
     }
-    
+
     return superview;
 }
 
@@ -134,7 +134,7 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     [self.tableView
      registerClass:[HKLabelCell class]
      forCellReuseIdentifier:HKLabelCellIdentifier];
@@ -151,7 +151,7 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
     [self.tableView
      registerClass:[HKTableViewHeaderFooterCellView class]
      forHeaderFooterViewReuseIdentifier:HKLabelSectionHeaderIdentifier];
-    
+
     NSString *title = self.properties[HKPropertyListTitleKey];
     self.title = title;
 }
@@ -164,7 +164,7 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
                                                   withExtension:@"plist"];
         _properties = [NSDictionary dictionaryWithContentsOfURL:plistUrl];
     }
-    
+
     return _properties;
 }
 
@@ -183,7 +183,7 @@ NSString * const HKPropertyListAccessoryDetailButtonId = @"detailButton";
     NSDictionary *section = [self sectionForIndex:modifiedSectionIndex];
     NSArray *rows = section[HKPropertyListRowsKey];
     NSDictionary *row = rows[indexPath.row];
-    
+
     return row;
 }
 
@@ -275,23 +275,30 @@ configureHeaderView:header
     return [self tableView:tableView heightForHeaderWithSectionInfo:sectionInfo atSectionIndex:section];
 }
 
+- (NSString *)tableView:(UITableView *)tableView cellIdentifierWithRowInfo:(NSDictionary *)rowInfo rowType:(HKPropertyListRowType)rowType atIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *cellIdentifier = [[self class] cellIdentifiers][rowType];
+
+    return cellIdentifier;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
     NSString *rowTypeStr = rowInfo[HKPropertyListTypeKey];
     HKPropertyListRowType rowType = [rowTypeStr rowType];
-    NSString *cellIdentifier = [[self class] cellIdentifiers][rowType];
-    
+    NSString *cellIdentifier = [self tableView:tableView cellIdentifierWithRowInfo:rowInfo rowType:rowType atIndexPath:indexPath];
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
                                                             forIndexPath:indexPath];
-    
+
     [self tableView:tableView
       configureCell:cell
         withRowInfo:rowInfo
             rowType:rowType
    andRowIdentifier:cellIdentifier
         atIndexPath:indexPath];
-    
+
     return cell;
 }
 
@@ -325,7 +332,7 @@ configureHeaderView:header
         [self tableView:tableView didSelectRowWithInfo:rowInfo atIndexPath:indexPath];
         return;
     }
-    
+
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     NSString *segue = select[HKPropertyListSegueKey];
     if (segue && [self shouldPerformSegueWithIdentifier:segue sender:cell])
@@ -427,7 +434,7 @@ configureHeaderView:header
             textFieldCell.textField.placeholder = placeholder;
             textFieldCell.textField.delegate = self;
             textFieldCell.textField.secureTextEntry = secured.boolValue;
-            
+
             break;
         }
         case HKPropertyListRowTypeNumeric:
@@ -443,7 +450,7 @@ configureHeaderView:header
             [numericCell.stepper addTarget:self
                                     action:@selector(numericCellStepperValueChanged:)
                           forControlEvents:UIControlEventValueChanged];
-            
+
             break;
         }
         case HKPropertyListRowTypeBoolean:
@@ -455,11 +462,11 @@ configureHeaderView:header
                                          action:@selector(switchCellSwitchValueChanged:)
                                forControlEvents:UIControlEventValueChanged];
         }
-            
+
         default:
             break;
     }
-    
+
     if (defaultValue && propertyIdentifier)
     {
         [self tableView:tableView
@@ -486,7 +493,7 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
   setDefaultValue:(id)value
     forIdentifier:(NSString *)identifier
 {
-    
+
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -495,7 +502,7 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
           forCell:(UITableViewCell *)cell
       atIndexPath:(NSIndexPath *)indexPath
 {
-    
+
 }
 
 - (void)sendChangeValueMessage:(id)value
@@ -510,14 +517,14 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
     {
         return;
     }
-    
+
     NSDictionary *rowInfo = [self rowForIndexPath:indexPath];
     NSString *identifier = rowInfo[HKPropertyListIdKey];
     if (!identifier)
     {
         return;
     }
-    
+
     [self tableView:tableView
      didChangeValue:value
       forIdentifier:identifier
@@ -530,14 +537,14 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    
+
     return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     NSString *value = textField.text;
-    
+
     [self sendChangeValueMessage:value
                          forView:textField];
 }
@@ -547,7 +554,7 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
 - (void)numericCellStepperValueChanged:(UIStepper *)stepper
 {
     NSNumber *value = @(stepper.value);
-    
+
     [self sendChangeValueMessage:value
                          forView:stepper];
 }
@@ -557,7 +564,7 @@ heightForRowWithInfo:(NSDictionary *)rowInfo
 - (void)switchCellSwitchValueChanged:(UISwitch *)switchCtrl
 {
     NSNumber *value = @(switchCtrl.on);
-
+    
     [self sendChangeValueMessage:value forView:switchCtrl];
 }
 @end

@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, HKModuleTransitionType)
 - (id)performSegueWithPath:(NSString *)path
                 parameters:(NSDictionary *)parameters
         fromViewController:(UIViewController *)sourceViewController
-                    sender:(UIView *)sender
+                    sender:(id)sender
                withOptions:(NSDictionary *)options;
 
 - (id)instanciateViewControllerWithPath:(NSString *)path;
